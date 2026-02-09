@@ -27,6 +27,7 @@
             Draft Portfolios
         </h2>
 
+        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @forelse($drafts as $draft)
                 <div class="bg-white rounded-xl shadow-sm border p-5 flex justify-between items-center">
