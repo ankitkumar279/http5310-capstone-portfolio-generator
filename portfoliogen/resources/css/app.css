@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "./nav.css";
+@import "./landing.css";
+@import "./how.css";
+@import "./templates.css";
+@import "./auth.css";
+@import "./dashboard.css";
+@import "./portfolio.css";
+@import "./portfolio-step.css";
+@import "./designerportfolio.css";
+@import "./portfolio-minimal.css";
+@import "./portfolio-dev.css";
+@import "./portfolio-business.css";

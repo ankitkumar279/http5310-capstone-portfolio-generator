@@ -1,0 +1,405 @@
+:root{
+  --pg-purple:#1C0770;
+  --pg-indigo:#261CC1;
+  --pg-blue:#3A9AFF;
+  --pg-neon:#F1FF5E;
+
+  --pg-bg:#0b1020;
+  --pg-surface: rgba(255,255,255,0.06);
+  --pg-surface2: rgba(255,255,255,0.08);
+  --pg-border: rgba(255,255,255,0.10);
+  --pg-text: rgba(255,255,255,0.92);
+  --pg-muted: rgba(255,255,255,0.62);
+}
+
+.pg-dash{
+  min-height: 100vh;
+  background:
+    radial-gradient(1000px 600px at 15% 10%, rgba(38,28,193,0.28), transparent 60%),
+    radial-gradient(900px 600px at 85% 70%, rgba(58,154,255,0.18), transparent 60%),
+    linear-gradient(180deg, #070a14, var(--pg-bg));
+  color: var(--pg-text);
+}
+
+.pg-shell{
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 22px;
+  padding: 22px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.pg-side{
+  border-radius: 18px;
+  background: rgba(15,16,24,0.72);
+  border: 1px solid var(--pg-border);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.40);
+  backdrop-filter: blur(14px);
+  padding: 16px;
+  position: sticky;
+  top: 16px;
+  height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+}
+
+.pg-brand{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  padding: 10px 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 12px;
+}
+.pg-brand img{ height: 28px; width:auto; display:block; }
+
+.pg-nav{
+  display:flex;
+  flex-direction:column;
+  gap: 6px;
+  margin-top: 10px;
+}
+.pg-nav a{
+  text-decoration:none;
+  color: rgba(255,255,255,0.78);
+  padding: 10px 12px;
+  border-radius: 12px;
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  border: 1px solid transparent;
+}
+.pg-nav a:hover{
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.92);
+}
+.pg-nav a.active{
+  background: linear-gradient(90deg, rgba(38,28,193,0.30), rgba(58,154,255,0.18));
+  border-color: rgba(58,154,255,0.18);
+  color: rgba(255,255,255,0.95);
+}
+
+.pg-side-bottom{
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  color: var(--pg-muted);
+  font-size: 13px;
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  gap: 10px;
+}
+.pg-side-bottom span{
+  max-width: 180px;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pg-main{
+  border-radius: 18px;
+  background: rgba(15,16,24,0.55);
+  border: 1px solid var(--pg-border);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+  backdrop-filter: blur(14px);
+  padding: 18px;
+  overflow:hidden;
+}
+
+.pg-topbar{
+  display:flex;
+  align-items:flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 6px 12px;
+}
+
+.pg-hello{
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.pg-hello small{
+  display:block;
+  font-weight: 600;
+  color: var(--pg-muted);
+  font-size: 14px;
+  margin-top: 6px;
+  max-width: 520px;
+}
+
+.pg-btn{
+  border: 0;
+  border-radius: 14px;
+  padding: 11px 16px;
+  font-weight: 900;
+  color: #0b1020;
+  background: linear-gradient(90deg, var(--pg-indigo), var(--pg-blue));
+  box-shadow: 0 16px 34px rgba(38,28,193,0.25);
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap: 10px;
+  white-space: nowrap;
+}
+.pg-btn:hover{ filter: brightness(1.04); transform: translateY(-1px); }
+
+.pg-stats{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.pg-card{
+  border-radius: 20px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 14px 50px rgba(0,0,0,0.22);
+  padding:14px;
+}
+
+.pg-card .k{
+  color: rgba(255,255,255,0.62);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.pg-card .v{
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-top: 10px;
+}
+
+.pg-card.pulse{
+  background:
+    radial-gradient(600px 250px at 20% 10%, rgba(38,28,193,0.25), transparent 60%),
+    rgba(255,255,255,0.06);
+}
+
+/* ===========================
+   TABLE CARD HEADER
+=========================== */
+
+.pg-table-card{
+  margin-top: 14px;
+}
+
+.pg-card-head{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.pg-card-head h5{
+  margin: 0;
+  font-weight: 900;
+  font-size: 22px;
+}
+
+.pg-card-head .sub{
+  color: var(--pg-muted);
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.pg-mini-btn{
+  border-radius: 14px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.88);
+  text-decoration:none;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+.pg-mini-btn:hover{ border-color: rgba(255,255,255,0.18); }
+
+/* ===========================
+   TABLE + ROW “CARD” STYLE
+=========================== */
+
+.pg-table-wrap{
+  border-radius: 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.09);
+  overflow-x: auto;
+  padding: 8px 10px 14px;
+}
+
+.pg-table{
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0 12px; /* gap between rows */
+}
+
+/* header */
+.pg-table thead th{
+  color: rgba(255,255,255,0.55);
+  font-weight: 900;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 12px 12px;
+  white-space: nowrap;
+}
+
+/* row */
+.pg-table tbody tr{
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+.pg-table tbody td{
+  padding: 14px 12px;
+  border: 0;
+  vertical-align: middle;
+  white-space: nowrap;
+  color: rgba(255,255,255,0.88);
+}
+
+.pg-table tbody tr td:first-child{ border-radius: 16px 0 0 16px; }
+.pg-table tbody tr td:last-child{ border-radius: 0 16px 16px 0; }
+
+/* keep actions on one line */
+.pg-table thead th:last-child,
+.pg-table tbody td:last-child{
+  width: 520px;
+}
+
+/* text helpers used in your blade */
+.pg-strong{
+  font-weight: 900;
+  color: rgba(255,255,255,0.95);
+}
+.pg-muted{
+  color: rgba(255,255,255,0.65);
+  font-weight: 600;
+}
+
+/* ===========================
+   STATUS BADGE
+=========================== */
+
+.pg-badge{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.92);
+  white-space: nowrap;
+}
+
+.pg-badge.draft{
+  border-color: rgba(241,255,94,0.35);
+  background: rgba(241,255,94,0.10);
+  color: rgba(241,255,94,0.95);
+}
+
+.pg-badge.published{
+  border-color: rgba(58,154,255,0.35);
+  background: rgba(58,154,255,0.12);
+  color: rgba(200,230,255,0.95);
+}
+
+/* ===========================
+   ACTION BUTTONS (ALIGNED)
+=========================== */
+
+.pg-actions{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+/* IMPORTANT: use pg-inline on forms (NOT bootstrap d-inline) */
+.pg-inline{
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* button + link same look */
+.pg-act{
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.92);
+  text-decoration: none !important;
+  cursor: pointer;
+  line-height: 1;
+  font-family: inherit;
+}
+
+/* remove underline always */
+.pg-act:link,
+.pg-act:visited,
+.pg-act:hover,
+.pg-act:active{
+  text-decoration: none !important;
+  color: rgba(255,255,255,0.92);
+}
+
+.pg-act:hover{
+  transform: translateY(-1px);
+  border-color: rgba(255,255,255,0.25);
+}
+
+/* primary + danger */
+.pg-act.primary{
+  background: linear-gradient(90deg, #4f46e5, #3A9AFF);
+  border: none;
+  color: #fff;
+}
+
+.pg-act.danger{
+  border: 1px solid rgba(255,80,110,0.5);
+  background: rgba(255,80,110,0.12);
+}
+
+/* keep everything consistent for form submit buttons */
+.pg-inline button.pg-act{
+  appearance: none;
+  -webkit-appearance: none;
+  line-height: 1;
+}
+
+/* responsive: on smaller screens allow wrap */
+@media (max-width: 1050px){
+  .pg-actions{
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  .pg-table thead th:last-child,
+  .pg-table tbody td:last-child{
+    width: auto;
+  }
+}
