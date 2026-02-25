@@ -4,7 +4,7 @@
                 || request()->routeIs('templates');
 @endphp
 
-<nav class="navbar navbar-expand-lg pg-nav {{ $isDarkPage ? 'pg-nav-solid' : '' }}">
+<nav class="navbar navbar-expand-lg navbar-dark pg-nav {{ $isDarkPage ? 'pg-nav-solid' : '' }}">
   <div class="container">
 
     <a class="navbar-brand pg-logo" href="{{ route('home') }}">
@@ -18,7 +18,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="mainNav">
+    <div class="navbar-collapse" id="mainNav">
 
       <ul class="navbar-nav mx-auto gap-lg-1 align-items-lg-center">
 
