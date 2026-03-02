@@ -749,3 +749,234 @@ html,body{height:100%}
   letter-spacing: .3px;
 }
 
+/* =========================
+   ✅ OWNER BAR FIX (all equal + Edit visible)
+   Paste at END to override
+========================= */
+
+/* tighter spacing in the row */
+.pi-ownerbar{
+  gap: 10px !important;
+  padding-bottom: 6px !important;
+}
+
+/* ALL owner buttons same size */
+.pi-ownerbar .pi-btn{
+  height: 46px !important;
+  min-width: 190px !important;   /* same width for all */
+  padding: 0 16px !important;
+  border-radius: 999px !important;
+  line-height: 46px !important;
+  font-size: 14px !important;
+  font-weight: 1100 !important;
+}
+
+/* keep icons hidden */
+.pi-ownerbar .pi-btn .pi-ico{
+  display:none !important;
+}
+
+/* ✅ FIX: Ghost button (Edit etc.) visibility */
+.pi-ownerbar .pi-btn-ghost{
+  background: rgba(255,255,255,.08) !important;    /* brighter */
+  border-color: rgba(255,255,255,.18) !important;  /* clearer border */
+  color: rgba(255,255,255,.92) !important;
+}
+
+/* hover looks premium */
+.pi-ownerbar .pi-btn-ghost:hover{
+  background: rgba(255,255,255,.12) !important;
+  border-color: rgba(255,170,0,.22) !important;
+}
+
+/* ✅ Make primary button not “too bright” compared to others */
+.pi-ownerbar .pi-btn-primary{
+  background: linear-gradient(135deg, rgba(35,114,39,.95), rgba(81,154,102,.85), rgba(255,170,0,.55)) !important;
+}
+
+/* make danger button consistent */
+.pi-ownerbar .pi-btn-danger{
+  background: rgba(255,80,80,.12) !important;
+  border-color: rgba(255,120,120,.35) !important;
+}
+
+/* Responsive: allow shrink on smaller screens */
+@media (max-width: 760px){
+  .pi-ownerbar .pi-btn{
+    min-width: 165px !important;
+  }
+}
+
+/* =========================================================
+   ✅ FINAL OVERRIDE (Publish bar + Owner buttons)
+   Paste at VERY END of portfolio-minimal.css
+========================================================= */
+
+/* ---------- PUBLISH BAR ---------- */
+body.pi-body .pi-pubbar-wrap{
+  padding: 14px 18px 10px !important;
+}
+
+body.pi-body .pi-pubbar{
+  max-width:1120px !important;
+  margin: 0 auto !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap: 16px !important;
+
+  padding: 14px 16px !important;
+  border-radius: 24px !important;
+
+  background:
+    radial-gradient(700px 240px at 15% 0%, rgba(255,170,0,.12), transparent 60%),
+    radial-gradient(700px 240px at 85% 100%, rgba(35,114,39,.16), transparent 60%),
+    rgba(0,0,0,.18) !important;
+
+  border: 1px solid rgba(255,255,255,.12) !important;
+  box-shadow: var(--shadow2) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+body.pi-body .pi-pubbar-left{
+  min-width:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap: 8px !important;
+}
+
+body.pi-body .pi-pubbar-title{
+  font-weight: 1100 !important;
+  font-size: 12px !important;
+  letter-spacing: .25px !important;
+  text-transform: uppercase !important;
+  color: rgba(255,255,255,.72) !important;
+}
+
+body.pi-body .pi-pubbar-link{
+  display:block !important;
+  max-width: 760px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+
+  font-weight: 1100 !important;
+  font-size: 14px !important;
+  color: rgba(255,255,255,.92) !important;
+  text-decoration: none !important;
+
+  padding: 10px 14px !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(255,255,255,.10) !important;
+  background: rgba(0,0,0,.22) !important;
+}
+
+body.pi-body .pi-pubbar-actions{
+  display:flex !important;
+  gap: 12px !important;
+  flex-shrink:0 !important;
+}
+
+body.pi-body .pi-pubbar-actions .pi-btn{
+  height: 46px !important;
+  padding: 0 18px !important;
+  border-radius: 16px !important;
+}
+
+/* stack on small screens */
+@media (max-width: 820px){
+  body.pi-body .pi-pubbar{
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  body.pi-body .pi-pubbar-actions{
+    justify-content:flex-end !important;
+  }
+  body.pi-body .pi-pubbar-link{
+    max-width: 100% !important;
+  }
+}
+
+/* ---------- OWNER BUTTONS (MAKE ALL SAME SIZE) ---------- */
+body.pi-body .pi-ownerbar{
+  gap: 10px !important;
+  justify-content: flex-end !important;
+}
+
+/* force identical width + height */
+body.pi-body .pi-ownerbar .pi-btn{
+  width: 190px !important;      /* ✅ all same */
+  height: 46px !important;
+  padding: 0 !important;
+  line-height: 46px !important;
+  border-radius: 999px !important;
+  font-size: 14px !important;
+  font-weight: 1100 !important;
+}
+
+/* make Edit/ghost visible */
+body.pi-body .pi-ownerbar .pi-btn-ghost{
+  background: rgba(255,255,255,.08) !important;
+  border: 1px solid rgba(255,255,255,.18) !important;
+  color: rgba(255,255,255,.92) !important;
+}
+
+/* keep icons hidden like you wanted */
+body.pi-body .pi-ownerbar .pi-btn .pi-ico{
+  display:none !important;
+}
+
+@media (max-width: 760px){
+  body.pi-body .pi-ownerbar .pi-btn{
+    width: 165px !important;
+  }
+}
+
+/* =========================================================
+   ✅ FIX: Edit button clipping + make Edit smaller
+   Paste at VERY END of portfolio-minimal.css
+========================================================= */
+
+/* Owner bar container: stop horizontal scrolling + center nicely */
+body.pi-body .pi-ownerbar{
+  justify-content: center !important;  /* not flex-end */
+  flex-wrap: wrap !important;          /* ✅ wrap to next line */
+  overflow-x: visible !important;      /* ✅ no clipping */
+  gap: 12px !important;
+  padding: 6px 0 10px !important;
+}
+
+/* Keep normal buttons same size */
+body.pi-body .pi-ownerbar .pi-btn{
+  width: 190px !important;
+  height: 46px !important;
+  line-height: 46px !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  font-size: 14px !important;
+  font-weight: 1100 !important;
+}
+
+/* ✅ Make EDIT smaller (only the Edit link button) */
+body.pi-body .pi-ownerbar > a.pi-btn-ghost{
+  width: 120px !important;             /* smaller */
+}
+
+/* Make ghost/edit visible */
+body.pi-body .pi-ownerbar .pi-btn-ghost{
+  background: rgba(255,255,255,.08) !important;
+  border: 1px solid rgba(255,255,255,.18) !important;
+  color: rgba(255,255,255,.92) !important;
+}
+
+/* keep icons hidden */
+body.pi-body .pi-ownerbar .pi-btn .pi-ico{
+  display:none !important;
+}
+
+/* small screens: allow buttons to shrink */
+@media (max-width: 760px){
+  body.pi-body .pi-ownerbar .pi-btn{ width: 165px !important; }
+  body.pi-body .pi-ownerbar > a.pi-btn-ghost{ width: 120px !important; }
+}

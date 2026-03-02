@@ -14,6 +14,15 @@
     $username = request()->route('username')
       ?? ($portfolio->user->username ?? null)
       ?? (auth()->user()->username ?? auth()->user()->name ?? null);
+
+    // ✅ Public URL (for published portfolios)
+    $publicUrl = null;
+    if (!empty($portfolio->public_id)) {
+      $publicUrl = route('portfolio.public.view', [
+        'username'  => $username,
+        'public_id' => $portfolio->public_id
+      ]);
+    }
   @endphp
 
   <div class="dp-blob dp-blob1"></div>
@@ -21,6 +30,34 @@
   <div class="dp-blob dp-blob3"></div>
 
   <div class="dp-wrap">
+
+    {{-- ✅ Published link bar (ONLY owner can see) --}}
+    @if(auth()->check() && auth()->id() === $portfolio->user_id && (session('public_url') || $portfolio->isPublished()))
+      @php
+        $finalPublicUrl = session('public_url') ?? $publicUrl;
+      @endphp
+
+      @if($finalPublicUrl)
+        <div class="dp-pubbar-wrap">
+          <div class="dp-pubbar">
+            <div class="dp-pubbar-left">
+              <div class="dp-pubbar-title">Published Link</div>
+              <a id="dpPublicLink" class="dp-pubbar-link"
+                 href="{{ $finalPublicUrl }}"
+                 target="_blank" rel="noopener">
+                {{ $finalPublicUrl }}
+              </a>
+            </div>
+
+            <div class="dp-pubbar-actions">
+              <button type="button" class="dp-btn" onclick="dpCopyPublicLink()">Copy</button>
+              <a class="dp-btn dp-btn-primary" href="{{ $finalPublicUrl }}" target="_blank" rel="noopener">Open</a>
+            </div>
+          </div>
+        </div>
+      @endif
+    @endif
+
     @if(auth()->check() && auth()->id() === $portfolio->user_id)
       <div class="dp-ownerbar-wrap">
         <div class="dp-ownerbar">
@@ -35,6 +72,27 @@
             'username'  => $username,
             'portfolio' => $portfolio->id
           ]) }}">Change Template</a>
+
+          {{-- ✅ Publish / Unpublish --}}
+          @if(!$portfolio->isPublished())
+            <form method="POST" action="{{ route('portfolio.publish', [
+              'username'  => $username,
+              'portfolio' => $portfolio->id
+            ]) }}">
+              @csrf
+              @method('PATCH')
+              <button class="dp-btn dp-btn-primary" type="submit">Publish</button>
+            </form>
+          @else
+            <form method="POST" action="{{ route('portfolio.unpublish', [
+              'username'  => $username,
+              'portfolio' => $portfolio->id
+            ]) }}">
+              @csrf
+              @method('PATCH')
+              <button class="dp-btn" type="submit">Unpublish</button>
+            </form>
+          @endif
 
           <form method="POST" action="{{ route('portfolio.draft', [
             'username'  => $username,
@@ -166,7 +224,7 @@
       <h2>Skills</h2>
 
       @if($portfolio->skills->count() === 0)
-        <div class="dp-muted">No skills added.</div>
+        <div class="dp-muted">No skills added yet.</div>
       @else
         @foreach($portfolio->skills as $s)
           <div class="dp-skill">
@@ -190,11 +248,16 @@
         <div class="dp-grid2">
           @foreach($portfolio->projects as $p)
             @php
+              // ✅ Reliable image URL:
+              // - if http(s) keep as-is
+              // - else force same-origin /storage/... to avoid localhost vs 127.0.0.1 issues
               $img = null;
               if (!empty($p->image_path)) {
-                if (preg_match('/^https?:\/\//i', $p->image_path)) $img = $p->image_path;
-                elseif (str_starts_with($p->image_path, 'storage/')) $img = asset($p->image_path);
-                else $img = \Illuminate\Support\Facades\Storage::url($p->image_path);
+                if (preg_match('/^https?:\/\//i', $p->image_path)) {
+                  $img = $p->image_path;
+                } else {
+                  $img = '/storage/' . ltrim($p->image_path, '/');
+                }
               }
             @endphp
 
@@ -308,6 +371,19 @@
   </div>
 
   <script>
+    // ✅ Copy published link
+    function dpCopyPublicLink(){
+      const el = document.getElementById('dpPublicLink');
+      if(!el) return;
+      const text = (el.getAttribute('href') || el.textContent || '').trim();
+      if(!text) return;
+
+      navigator.clipboard.writeText(text)
+        .then(() => {})
+        .catch(() => alert('Copy failed. Please copy manually.'));
+    }
+
+    // reveal animation
     (function(){
       const els = Array.from(document.querySelectorAll('.dp-reveal'));
       const io = new IntersectionObserver((entries) => {

@@ -153,15 +153,16 @@
                   <div class="pg-edu-content" style="width:100%;">
                     <div class="pg-edu-title">{{ $p->title }}</div>
 
-                    @if($p->image_path)
-                      <div style="margin-top:10px;">
-                        <img
-                          src="{{ asset('storage/'.$p->image_path) }}"
-                          alt="project"
-                          style="width:100%; max-height:200px; object-fit:cover; border-radius:14px; border:1px solid rgba(255,255,255,.12);"
-                        >
-                      </div>
-                    @endif
+                    
+                   @if($p->image_path)
+  <div style="margin-top:10px;">
+    <img
+     src="{{ '/storage/' . ltrim($p->image_path, '/') }}"
+      alt="project"
+      style="width:100%; max-height:200px; object-fit:cover; border-radius:14px; border:1px solid rgba(255,255,255,.12);"
+    >
+  </div>
+@endif
 
                     <div class="pg-muted" style="margin-top:10px; line-height:1.5;">
                       {{ $p->description }}

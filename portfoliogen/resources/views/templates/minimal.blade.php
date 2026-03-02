@@ -15,7 +15,44 @@
     $username = request()->route('username')
       ?? ($portfolio->user->username ?? null)
       ?? (auth()->user()->username ?? auth()->user()->name ?? null);
+
+    // ✅ Public URL (for published portfolios)
+    $publicUrl = null;
+    if (!empty($portfolio->public_id)) {
+      $publicUrl = route('portfolio.public.view', [
+        'username'  => $username,
+        'public_id' => $portfolio->public_id
+      ]);
+    }
   @endphp
+
+  {{-- ✅ Published link bar (ONLY owner can see) --}}
+  @if(auth()->check() && auth()->id() === $portfolio->user_id && (session('public_url') || $portfolio->isPublished()))
+    @php
+      $finalPublicUrl = session('public_url') ?? $publicUrl;
+    @endphp
+
+    @if($finalPublicUrl)
+      <div class="pi-pubbar-wrap">
+        <div class="pi-pubbar">
+          <div class="pi-pubbar-left">
+            <div class="pi-pubbar-title">Published Link</div>
+            <a id="piPublicLink"
+               class="pi-pubbar-link"
+               href="{{ $finalPublicUrl }}"
+               target="_blank" rel="noopener">
+              {{ $finalPublicUrl }}
+            </a>
+          </div>
+
+          <div class="pi-pubbar-actions">
+            <button type="button" class="pi-btn pi-btn-ghost" onclick="piCopyPublicLink()">Copy</button>
+            <a class="pi-btn pi-btn-primary" href="{{ $finalPublicUrl }}" target="_blank" rel="noopener">Open</a>
+          </div>
+        </div>
+      </div>
+    @endif
+  @endif
 
   @if(auth()->check() && auth()->id() === $portfolio->user_id)
     <div class="pi-owner-wrap">
@@ -36,6 +73,31 @@
           <span class="pi-ico">@includeIf('portfolio.partials.icons.layers')</span>
           Change Template
         </a>
+
+        {{-- ✅ Publish / Unpublish --}}
+        @if(!$portfolio->isPublished())
+          <form method="POST" action="{{ route('portfolio.publish', [
+              'username'  => $username,
+              'portfolio' => $portfolio->id
+          ]) }}">
+            @csrf
+            @method('PATCH')
+            <button class="pi-btn pi-btn-primary" type="submit">
+              Publish
+            </button>
+          </form>
+        @else
+          <form method="POST" action="{{ route('portfolio.unpublish', [
+              'username'  => $username,
+              'portfolio' => $portfolio->id
+          ]) }}">
+            @csrf
+            @method('PATCH')
+            <button class="pi-btn pi-btn-ghost" type="submit">
+              Unpublish
+            </button>
+          </form>
+        @endif
 
         <form method="POST" action="{{ route('portfolio.draft', [
             'username'  => $username,
@@ -188,7 +250,6 @@
           </div>
         </div>
 
-        {{-- ✅ FIXED HERO RIGHT (your divs were broken) --}}
         <div class="pi-hero-right" aria-hidden="true">
           <div class="pi-iso">
             <div class="pi-iso-plane">
@@ -283,11 +344,16 @@
         <div class="pi-grid2 pi-projects-grid">
           @foreach($portfolio->projects as $p)
             @php
+              // ✅ Reliable image URL:
+              // - if http(s) keep as-is
+              // - else force same-origin /storage/...
               $img = null;
               if (!empty($p->image_path)) {
-                if (preg_match('/^https?:\/\//i', $p->image_path)) $img = $p->image_path;
-                elseif (str_starts_with($p->image_path, 'storage/')) $img = asset($p->image_path);
-                else $img = \Illuminate\Support\Facades\Storage::url($p->image_path);
+                if (preg_match('/^https?:\/\//i', $p->image_path)) {
+                  $img = $p->image_path;
+                } else {
+                  $img = '/storage/' . ltrim($p->image_path, '/');
+                }
               }
             @endphp
 
@@ -425,5 +491,19 @@
     </footer>
 
   </main>
+
+  <script>
+    function piCopyPublicLink(){
+      const el = document.getElementById('piPublicLink');
+      if(!el) return;
+      const text = (el.getAttribute('href') || el.textContent || '').trim();
+      if(!text) return;
+
+      navigator.clipboard.writeText(text)
+        .then(() => {})
+        .catch(() => alert('Copy failed. Please copy manually.'));
+    }
+  </script>
+
 </body>
 </html>

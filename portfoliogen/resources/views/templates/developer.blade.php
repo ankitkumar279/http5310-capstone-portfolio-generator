@@ -16,28 +16,80 @@
 <body class="dev-body" id="top">
 
   @php
-    // ✅ Get the username from the current route (works with your show route: /{username}/p/{portfolio})
-    $username = request()->route('username') ?? (auth()->user()->username ?? auth()->user()->name ?? null);
+    $username = request()->route('username')
+      ?? ($portfolio->user->username ?? null)
+      ?? (auth()->user()->username ?? auth()->user()->name ?? null);
+
+    // ✅ Public URL (for published portfolios)
+    $publicUrl = null;
+    if (!empty($portfolio->public_id)) {
+      $publicUrl = route('portfolio.public.view', [
+        'username'  => $username,
+        'public_id' => $portfolio->public_id
+      ]);
+    }
   @endphp
+
+  {{-- ✅ Published link bar (ONLY owner can see) --}}
+  @if(auth()->check() && auth()->id() === $portfolio->user_id && (session('public_url') || $portfolio->isPublished()))
+    @php $finalPublicUrl = session('public_url') ?? $publicUrl; @endphp
+
+    @if($finalPublicUrl)
+      <div class="dev-pubbar-wrap">
+        <div class="dev-pubbar">
+          <div class="dev-pubbar-left">
+            <div class="dev-pubbar-title">Published Link</div>
+            <a id="devPublicLink"
+              class="dev-pubbar-link"
+              href="{{ $finalPublicUrl }}"
+              target="_blank" rel="noopener">
+              {{ $finalPublicUrl }}
+            </a>
+          </div>
+
+          <div class="dev-pubbar-actions">
+            <button type="button" class="dev-admin-btn dev-admin-btn-ghost" onclick="devCopyPublicLink()">Copy</button>
+            <a class="dev-admin-btn dev-admin-btn-primary" href="{{ $finalPublicUrl }}" target="_blank" rel="noopener">Open</a>
+          </div>
+        </div>
+      </div>
+    @endif
+  @endif
 
   {{-- Owner actions --}}
   @if(auth()->check() && auth()->id() === $portfolio->user_id)
-    <div class="container py-3 d-flex justify-content-end gap-2 flex-wrap">
-      {{-- ✅ FIXED: pass username + portfolio + step --}}
+    <div class="container py-3 dev-adminbar">
       <a href="{{ route('portfolio.step', [
         'username'  => $username,
         'portfolio' => $portfolio->id,
         'step'      => 6
-      ]) }}" class="btn btn-outline-light">Edit</a>
+      ]) }}" class="dev-admin-btn dev-admin-btn-ghost">Edit</a>
 
-      {{-- ✅ If this route also lives under /{username}/..., pass username too.
-           If your route does NOT include username, you can revert to route('portfolio.template.edit', $portfolio->id) --}}
       <a href="{{ route('portfolio.template.edit', [
         'username'  => $username,
         'portfolio' => $portfolio->id
-      ]) }}" class="btn btn-outline-primary">
-        Change Template
-      </a>
+      ]) }}" class="dev-admin-btn dev-admin-btn-primary">Change Template</a>
+
+      {{-- ✅ Publish / Unpublish --}}
+      @if(!$portfolio->isPublished())
+        <form method="POST" action="{{ route('portfolio.publish', [
+          'username'  => $username,
+          'portfolio' => $portfolio->id
+        ]) }}">
+          @csrf
+          @method('PATCH')
+          <button class="dev-admin-btn dev-admin-btn-primary" type="submit">Publish</button>
+        </form>
+      @else
+        <form method="POST" action="{{ route('portfolio.unpublish', [
+          'username'  => $username,
+          'portfolio' => $portfolio->id
+        ]) }}">
+          @csrf
+          @method('PATCH')
+          <button class="dev-admin-btn dev-admin-btn-ghost" type="submit">Unpublish</button>
+        </form>
+      @endif
 
       <form method="POST" action="{{ route('portfolio.draft', [
         'username'  => $username,
@@ -45,7 +97,7 @@
       ]) }}">
         @csrf
         @method('PATCH')
-        <button class="btn btn-secondary">Save as Draft</button>
+        <button class="dev-admin-btn dev-admin-btn-ghost" type="submit">Save as Draft</button>
       </form>
 
       <form method="POST" action="{{ route('portfolio.duplicate', [
@@ -53,17 +105,17 @@
         'portfolio' => $portfolio->id
       ]) }}">
         @csrf
-        <button class="btn btn-outline-success">Duplicate</button>
+        <button class="dev-admin-btn dev-admin-btn-ghost" type="submit">Duplicate</button>
       </form>
 
       <form method="POST" action="{{ route('portfolio.destroy', [
         'username'  => $username,
         'portfolio' => $portfolio->id
       ]) }}"
-            onsubmit="return confirm('Delete this portfolio? This cannot be undone.');">
+        onsubmit="return confirm('Delete this portfolio? This cannot be undone.');">
         @csrf
         @method('DELETE')
-        <button class="btn btn-outline-danger">Delete</button>
+        <button class="dev-admin-btn dev-admin-btn-danger" type="submit">Delete</button>
       </form>
     </div>
   @endif
@@ -88,13 +140,13 @@
 
         <div class="dev-nav-actions">
           @if($portfolio->github_url)
-            <a class="dev-icon-btn" href="{{ $portfolio->github_url }}" target="_blank" aria-label="GitHub">
+            <a class="dev-icon-btn" href="{{ $portfolio->github_url }}" target="_blank" aria-label="GitHub" rel="noopener">
               @include('portfolio.partials.icons', ['name' => 'github'])
             </a>
           @endif
 
           @if($portfolio->linkedin_url)
-            <a class="dev-icon-btn" href="{{ $portfolio->linkedin_url }}" target="_blank" aria-label="LinkedIn">
+            <a class="dev-icon-btn" href="{{ $portfolio->linkedin_url }}" target="_blank" aria-label="LinkedIn" rel="noopener">
               @include('portfolio.partials.icons', ['name' => 'linkedin'])
             </a>
           @endif
@@ -274,16 +326,12 @@
         @foreach($portfolio->projects as $p)
           @php
             $img = null;
-
             if (!empty($p->image_path)) {
               if (preg_match('/^https?:\/\//i', $p->image_path)) {
                 $img = $p->image_path;
-              }
-              elseif (str_starts_with($p->image_path, 'storage/')) {
-                $img = asset($p->image_path);
-              }
-              else {
-                $img = \Illuminate\Support\Facades\Storage::url($p->image_path);
+              } else {
+                // ✅ always same-origin
+                $img = '/storage/' . ltrim($p->image_path, '/');
               }
             }
           @endphp
@@ -315,10 +363,10 @@
 
                     <div class="dev-project-actions">
                       @if($p->live_url)
-                        <a class="dev-btn dev-btn-primary dev-btn-sm" href="{{ $p->live_url }}" target="_blank">Live</a>
+                        <a class="dev-btn dev-btn-primary dev-btn-sm" href="{{ $p->live_url }}" target="_blank" rel="noopener">Live</a>
                       @endif
                       @if($p->github_url)
-                        <a class="dev-btn dev-btn-ghost dev-btn-sm" href="{{ $p->github_url }}" target="_blank">GitHub</a>
+                        <a class="dev-btn dev-btn-ghost dev-btn-sm" href="{{ $p->github_url }}" target="_blank" rel="noopener">GitHub</a>
                       @endif
                     </div>
                   </div>
@@ -381,12 +429,12 @@
           <div class="col-lg-5">
             <div class="d-flex gap-2 flex-wrap justify-content-lg-end">
               @if($portfolio->github_url)
-                <a class="dev-btn dev-btn-ghost" href="{{ $portfolio->github_url }}" target="_blank">
+                <a class="dev-btn dev-btn-ghost" href="{{ $portfolio->github_url }}" target="_blank" rel="noopener">
                   @include('portfolio.partials.icons', ['name' => 'github']) GitHub
                 </a>
               @endif
               @if($portfolio->linkedin_url)
-                <a class="dev-btn dev-btn-ghost" href="{{ $portfolio->linkedin_url }}" target="_blank">
+                <a class="dev-btn dev-btn-ghost" href="{{ $portfolio->linkedin_url }}" target="_blank" rel="noopener">
                   @include('portfolio.partials.icons', ['name' => 'linkedin']) LinkedIn
                 </a>
               @endif
@@ -404,6 +452,17 @@
   </section>
 
   <script>
+    function devCopyPublicLink(){
+      const el = document.getElementById('devPublicLink');
+      if(!el) return;
+      const text = (el.getAttribute('href') || el.textContent || '').trim();
+      if(!text) return;
+
+      navigator.clipboard.writeText(text)
+        .then(() => {})
+        .catch(() => alert('Copy failed. Please copy manually.'));
+    }
+
     // Smooth scroll only
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', (e) => {

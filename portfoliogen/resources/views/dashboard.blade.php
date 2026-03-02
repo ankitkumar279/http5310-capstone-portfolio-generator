@@ -35,9 +35,15 @@
           <small>Your PortfolioGen dashboard overview</small>
         </h1>
 
-        <a class="pg-btn" href="{{ route('portfolio.create', ['username' => $u]) }}">
-          + Create New Portfolio
-        </a>
+        <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:flex-end;">
+          <a class="pg-btn" href="{{ route('dashboard.published', ['username' => $u]) }}">
+            Manage Published
+          </a>
+
+          <a class="pg-btn" href="{{ route('portfolio.create', ['username' => $u]) }}">
+            + Create New Portfolio
+          </a>
+        </div>
       </div>
 
       @if(session('error'))
@@ -47,7 +53,6 @@
         <div class="alert alert-success">{{ session('success') }}</div>
       @endif
 
-      {{-- STATS --}}
       <section class="pg-stats">
         <div class="pg-card pulse">
           <div class="k">Total Portfolios</div>
@@ -65,7 +70,6 @@
         </div>
       </section>
 
-      {{-- RECENT TABLE --}}
       <section class="pg-card pg-table-card">
         <div class="pg-card-head">
           <div>

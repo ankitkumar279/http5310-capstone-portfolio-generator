@@ -486,3 +486,199 @@ body.dev-body{
   left:16px;
   z-index:2;
 }
+
+/* =========================================================
+   ✅ DEV TEMPLATE: Publish bar + Admin buttons (FINAL OVERRIDE)
+   Paste at VERY END of public/css/portfolio-dev.css
+========================================================= */
+
+/* ---------- Admin row layout ---------- */
+.dev-adminbar{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  align-items:center;
+  margin-top: 8px;
+}
+
+/* Make forms not shrink weirdly */
+.dev-adminbar form{ margin:0; }
+
+/* ---------- Unified admin button ---------- */
+.dev-admin-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:46px;
+  padding:0 18px;
+  border-radius:999px;
+
+  border:1px solid rgba(231,242,234,0.16);
+  background: rgba(231,242,234,0.06);
+
+  color: rgba(231,242,234,0.94);
+  font-weight: 900;
+  letter-spacing: .2px;
+  text-decoration:none;
+  white-space: nowrap;
+  cursor:pointer;
+
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+  backdrop-filter: blur(14px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dev-admin-btn:hover{
+  transform: translateY(-2px);
+  border-color: rgba(31,125,83,0.55);
+  box-shadow: 0 18px 60px rgba(0,0,0,.35);
+}
+
+.dev-admin-btn:active{
+  transform: translateY(0px);
+}
+
+.dev-admin-btn:focus-visible{
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(31,125,83,0.20),
+    0 18px 60px rgba(0,0,0,.35);
+}
+
+/* Ghost */
+.dev-admin-btn-ghost{
+  background: rgba(231,242,234,0.05);
+  border-color: rgba(231,242,234,0.18);
+}
+.dev-admin-btn-ghost:hover{
+  background: rgba(231,242,234,0.07);
+}
+
+/* Primary (green) */
+.dev-admin-btn-primary{
+  border-color: rgba(31,125,83,0.55);
+  background: linear-gradient(
+    135deg,
+    rgba(31,125,83,0.98),
+    rgba(37,95,56,0.92)
+  );
+}
+.dev-admin-btn-primary:hover{
+  border-color: rgba(31,125,83,0.75);
+  box-shadow: 0 18px 60px rgba(31,125,83,.22), 0 18px 60px rgba(0,0,0,.35);
+}
+
+/* Danger */
+.dev-admin-btn-danger{
+  border:1px solid rgba(255,120,120,.28);
+  background: rgba(255,80,80,.14);
+}
+.dev-admin-btn-danger:hover{
+  border-color: rgba(255,120,120,.40);
+  box-shadow: 0 18px 60px rgba(255,80,80,.12), 0 18px 60px rgba(0,0,0,.35);
+}
+
+/* ---------- Publish bar wrapper (spacing + max width) ---------- */
+.dev-pubbar-wrap{
+  padding: 10px 0 0;
+}
+.dev-pubbar{
+  width: min(1120px, calc(100% - 24px));
+  margin: 0 auto 10px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+
+  padding: 14px 14px 14px 16px;
+  border-radius: 22px;
+  border: 1px solid rgba(31,125,83,0.28);
+
+  background:
+    radial-gradient(700px 240px at 8% 0%, rgba(31,125,83,.22), transparent 60%),
+    radial-gradient(700px 240px at 92% 100%, rgba(37,95,56,.18), transparent 62%),
+    rgba(0,0,0,.22);
+
+  backdrop-filter: blur(16px);
+  box-shadow: 0 16px 55px rgba(0,0,0,.35);
+}
+
+/* Left side */
+.dev-pubbar-left{
+  min-width: 0;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.dev-pubbar-title{
+  font-weight: 950;
+  letter-spacing: .3px;
+  color: rgba(231,242,234,0.92);
+  font-size: .95rem;
+}
+
+/* Link pill (prevents ugly long line) */
+.dev-pubbar-link{
+  display:block;
+  max-width: 100%;
+  padding: 10px 12px;
+
+  border-radius: 16px;
+  border: 1px solid rgba(31,125,83,0.28);
+  background: rgba(0,0,0,.22);
+
+  color: rgba(231,242,234,0.92);
+  text-decoration: none;
+  font-weight: 850;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dev-pubbar-link:hover{
+  border-color: rgba(31,125,83,0.55);
+  background: rgba(0,0,0,.28);
+}
+
+/* Right side actions */
+.dev-pubbar-actions{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-shrink: 0;
+}
+
+/* Make Copy slightly smaller than Open (nice hierarchy) */
+.dev-pubbar-actions .dev-admin-btn-ghost{
+  height: 44px;
+  padding: 0 16px;
+}
+.dev-pubbar-actions .dev-admin-btn-primary{
+  height: 46px;
+  padding: 0 18px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px){
+  .dev-adminbar{ justify-content:center; }
+
+  .dev-pubbar{
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .dev-pubbar-actions{
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 520px){
+  .dev-pubbar-actions{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .dev-pubbar-actions .dev-admin-btn{
+    width: 100%;
+  }
+}

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Models\Education;
 use App\Models\Experience;
 use App\Models\Skill;
@@ -61,51 +62,43 @@ class PortfolioWizardController extends Controller
     public function deleteEducation(string $username, Portfolio $portfolio, Education $education)
     {
         $this->authorizeOwner($portfolio);
-
         if ((string) $education->portfolio_id !== (string) $portfolio->id) abort(403);
-
         $education->delete();
-
         return back()->with('success', 'Education deleted.');
     }
 
     public function deleteExperience(string $username, Portfolio $portfolio, Experience $experience)
     {
         $this->authorizeOwner($portfolio);
-
         if ((string) $experience->portfolio_id !== (string) $portfolio->id) abort(403);
-
         $experience->delete();
-
         return back()->with('success', 'Experience deleted.');
     }
 
     public function deleteSkill(string $username, Portfolio $portfolio, Skill $skill)
     {
         $this->authorizeOwner($portfolio);
-
         if ((string) $skill->portfolio_id !== (string) $portfolio->id) abort(403);
-
         $skill->delete();
-
         return back()->with('success', 'Skill deleted.');
     }
 
     public function deleteProject(string $username, Portfolio $portfolio, Project $project)
     {
         $this->authorizeOwner($portfolio);
-
         if ((string) $project->portfolio_id !== (string) $portfolio->id) abort(403);
 
-        $project->delete();
+        if ($project->image_path) {
+            Storage::disk('public')->delete($project->image_path);
+        }
 
+        $project->delete();
         return back()->with('success', 'Project deleted.');
     }
 
     public function updateEducation(Request $request, string $username, Portfolio $portfolio, Education $education)
     {
         $this->authorizeOwner($portfolio);
-
         if ((string) $education->portfolio_id !== (string) $portfolio->id) abort(403);
 
         $data = $request->validate([
@@ -116,14 +109,12 @@ class PortfolioWizardController extends Controller
         ]);
 
         $education->update($data);
-
         return back()->with('success', 'Education updated.');
     }
 
     public function updateExperience(Request $request, string $username, Portfolio $portfolio, Experience $experience)
     {
         $this->authorizeOwner($portfolio);
-
         if ((string) $experience->portfolio_id !== (string) $portfolio->id) abort(403);
 
         $data = $request->validate([
@@ -135,14 +126,12 @@ class PortfolioWizardController extends Controller
         ]);
 
         $experience->update($data);
-
         return back()->with('success', 'Experience updated.');
     }
 
     public function updateSkill(Request $request, string $username, Portfolio $portfolio, Skill $skill)
     {
         $this->authorizeOwner($portfolio);
-
         if ((string) $skill->portfolio_id !== (string) $portfolio->id) abort(403);
 
         $data = $request->validate([
@@ -151,14 +140,12 @@ class PortfolioWizardController extends Controller
         ]);
 
         $skill->update($data);
-
         return back()->with('success', 'Skill updated.');
     }
 
     public function updateProject(Request $request, string $username, Portfolio $portfolio, Project $project)
     {
         $this->authorizeOwner($portfolio);
-
         if ((string) $project->portfolio_id !== (string) $portfolio->id) abort(403);
 
         $data = $request->validate([
@@ -166,32 +153,66 @@ class PortfolioWizardController extends Controller
             'description' => ['required', 'string', 'max:2000'],
             'live_url'    => ['nullable', 'url', 'max:255'],
             'github_url'  => ['nullable', 'url', 'max:255'],
+            'image'       => ['nullable', 'image', 'max:4096'],
         ]);
 
         if ($request->hasFile('image')) {
-            $request->validate(['image' => ['image', 'max:4096']]);
-            $path = $request->file('image')->store('projects', 'public');
-            $data['image_path'] = $path;
+            if ($project->image_path) {
+                Storage::disk('public')->delete($project->image_path);
+            }
+            $data['image_path'] = $request->file('image')->store('projects', 'public');
         }
 
         $project->update($data);
-
         return back()->with('success', 'Project updated.');
     }
 
-    // Save as draft
     public function saveDraft(string $username, Portfolio $portfolio)
     {
         $this->authorizeOwner($portfolio);
 
-        $portfolio->update(['status' => 'draft']);
+        $portfolio->update([
+            'status' => 'draft',
+            'published_at' => null,
+        ]);
 
         return redirect()->route('dashboard', [
             'username' => $this->u(),
         ])->with('success', 'Portfolio saved as draft.');
     }
 
-    // Delete
+    public function publish(string $username, Portfolio $portfolio)
+    {
+        $this->authorizeOwner($portfolio);
+
+        if (empty($portfolio->public_id)) {
+            $portfolio->public_id = Str::random(16);
+            while (Portfolio::where('public_id', $portfolio->public_id)->exists()) {
+                $portfolio->public_id = Str::random(16);
+            }
+        }
+
+        $portfolio->status = 'published';
+        $portfolio->published_at = now();
+        $portfolio->save();
+
+        return redirect()->route('dashboard.published', [
+            'username' => $this->u(),
+        ])->with('success', 'Portfolio published! Your public link is now live.');
+    }
+
+    public function unpublish(string $username, Portfolio $portfolio)
+    {
+        $this->authorizeOwner($portfolio);
+
+        $portfolio->update([
+            'status' => 'draft',
+            'published_at' => null,
+        ]);
+
+        return back()->with('success', 'Portfolio moved to draft.');
+    }
+
     public function destroy(string $username, Portfolio $portfolio)
     {
         $this->authorizeOwner($portfolio);
@@ -223,7 +244,6 @@ class PortfolioWizardController extends Controller
         ])->with('success', 'Portfolio deleted.');
     }
 
-    // Duplicate
     public function duplicate(string $username, Portfolio $portfolio)
     {
         $this->authorizeOwner($portfolio);
@@ -247,6 +267,9 @@ class PortfolioWizardController extends Controller
                 'linkedin_url'  => $portfolio->linkedin_url,
                 'twitter_url'   => $portfolio->twitter_url,
                 'photo_path'    => null,
+
+                'public_id'     => null,
+                'published_at'  => null,
             ]);
 
             foreach ($portfolio->educations as $e) {
@@ -285,7 +308,6 @@ class PortfolioWizardController extends Controller
         ])->with('success', 'Portfolio duplicated (saved as draft).');
     }
 
-    // Change template page
     public function editTemplate(string $username, Portfolio $portfolio)
     {
         $this->authorizeOwner($portfolio);
@@ -295,7 +317,6 @@ class PortfolioWizardController extends Controller
         ]);
     }
 
-    // Save new template
     public function updateTemplate(Request $request, string $username, Portfolio $portfolio)
     {
         $this->authorizeOwner($portfolio);
@@ -314,7 +335,6 @@ class PortfolioWizardController extends Controller
         ])->with('success', 'Template updated.');
     }
 
-    // Wizard save
     public function saveStep(Request $request, string $username, Portfolio $portfolio, int $step)
     {
         $this->authorizeOwner($portfolio);
@@ -329,7 +349,6 @@ class PortfolioWizardController extends Controller
 
         $isAutosave = $request->boolean('autosave') || $request->query('autosave') == 1;
 
-        // STEP 1
         if ($step === 1) {
             $data = $request->validate([
                 'full_name'     => 'required|string|max:120',
@@ -360,7 +379,6 @@ class PortfolioWizardController extends Controller
             ]);
         }
 
-        // STEP 2 Education (min 1)
         if ($step === 2) {
             $action = $request->input('action', 'add');
 
@@ -381,7 +399,6 @@ class PortfolioWizardController extends Controller
                 return back()->with('success', 'Education added.');
             }
 
-            // next
             if ($portfolio->educations()->count() < 1) {
                 return back()->with('error', 'At least one education is required.');
             }
@@ -397,7 +414,6 @@ class PortfolioWizardController extends Controller
             ]);
         }
 
-        // STEP 3 Experience
         if ($step === 3) {
             $action = $request->input('action', 'next');
 
@@ -430,7 +446,6 @@ class PortfolioWizardController extends Controller
             ]);
         }
 
-        // STEP 4 Skills
         if ($step === 4) {
             $action = $request->input('action', 'next');
 
@@ -462,7 +477,6 @@ class PortfolioWizardController extends Controller
             ]);
         }
 
-        // STEP 5 Projects
         if ($step === 5) {
             $action = $request->input('action', 'next');
 
@@ -470,7 +484,7 @@ class PortfolioWizardController extends Controller
                 $request->validate([
                     'title'       => 'required|string|max:180',
                     'description' => 'required|string|max:1200',
-                    'image'       => 'nullable|image|max:4096',
+                    'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
                     'live_url'    => 'nullable|url|max:255',
                     'github_url'  => 'nullable|url|max:255',
                 ]);
@@ -499,7 +513,6 @@ class PortfolioWizardController extends Controller
             ]);
         }
 
-        // STEP 6 Review
         if ($step === 6) {
             $portfolio->update(['status' => 'draft']);
 

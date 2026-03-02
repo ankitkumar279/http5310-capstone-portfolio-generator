@@ -11,7 +11,12 @@ class Portfolio extends Model
     protected $fillable = [
         'user_id', 'title', 'template_key', 'status', 'current_step',
         'full_name', 'job_title', 'short_bio', 'location',
-        'github_url', 'linkedin_url', 'twitter_url', 'photo_path'
+        'github_url', 'linkedin_url', 'twitter_url', 'photo_path',
+        'public_id', 'published_at',
+    ];
+
+    protected $casts = [
+        'published_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
@@ -37,5 +42,18 @@ class Portfolio extends Model
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class);
+    }
+
+    public function isPublished(): bool
+    {
+        return $this->status === 'published' && !is_null($this->published_at) && !empty($this->public_id);
+    }
+
+    public function publicUrl(): string
+    {
+        return route('portfolio.public.view', [
+            'username'  => $this->user?->username,
+            'public_id' => $this->public_id,
+        ]);
     }
 }

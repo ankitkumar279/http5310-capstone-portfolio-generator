@@ -20,6 +20,44 @@
       ?? (auth()->user()->username ?? auth()->user()->name ?? null);
   @endphp
 
+  {{-- Published link bar (only if published or session has it) --}}
+  @php
+    $publicUrl = null;
+    if (!empty($portfolio->public_id)) {
+      $publicUrl = route('portfolio.public.view', [
+        'username'  => $username,
+        'public_id' => $portfolio->public_id
+      ]);
+    }
+  @endphp
+
+  @if(auth()->check() && auth()->id() === $portfolio->user_id && (session('public_url') || $portfolio->isPublished()))
+    <div class="container pt-2">
+      <div class="pg-pubbar">
+        <div class="pg-pubbar-left">
+          <div class="pg-pubbar-title">  Published Link — Management options are visible only to the owner</div>
+          <a id="pgPublicLink" class="pg-pubbar-link"
+             href="{{ session('public_url') ?? $publicUrl }}"
+             target="_blank" rel="noopener">
+            {{ session('public_url') ?? $publicUrl }}
+          </a>
+        </div>
+
+        <div class="pg-pubbar-actions">
+          <button type="button" class="pg-pubbar-btn" onclick="pgCopyPublicLink()">
+            Copy
+          </button>
+
+          <a class="pg-pubbar-btn pg-pubbar-btn-primary"
+             href="{{ session('public_url') ?? $publicUrl }}"
+             target="_blank" rel="noopener">
+            Open
+          </a>
+        </div>
+      </div>
+    </div>
+  @endif
+
   @if(auth()->check() && auth()->id() === $portfolio->user_id)
     <div class="container py-3 d-flex justify-content-end gap-2 flex-wrap">
 
@@ -33,6 +71,18 @@
           'username'  => $username,
           'portfolio' => $portfolio->id
       ]) }}" class="btn btn-outline-primary">Change Template</a>
+
+      {{-- Publish button (only when NOT published) --}}
+      @if(!$portfolio->isPublished())
+        <form method="POST" action="{{ route('portfolio.publish', [
+            'username'  => $username,
+            'portfolio' => $portfolio->id
+        ]) }}">
+          @csrf
+          @method('PATCH')
+          <button class="btn btn-primary">Publish</button>
+        </form>
+      @endif
 
       <form method="POST" action="{{ route('portfolio.draft', [
           'username'  => $username,
@@ -103,13 +153,13 @@
             <div class="biz-actions">
               <a class="biz-btn biz-btn-primary" href="#contact">Get in touch</a>
               @if($portfolio->linkedin_url)
-                <a class="biz-btn biz-btn-ghost" href="{{ $portfolio->linkedin_url }}" target="_blank">LinkedIn</a>
+                <a class="biz-btn biz-btn-ghost" href="{{ $portfolio->linkedin_url }}" target="_blank" rel="noopener">LinkedIn</a>
               @endif
               @if($portfolio->github_url)
-                <a class="biz-btn biz-btn-ghost" href="{{ $portfolio->github_url }}" target="_blank">GitHub</a>
+                <a class="biz-btn biz-btn-ghost" href="{{ $portfolio->github_url }}" target="_blank" rel="noopener">GitHub</a>
               @endif
               @if($portfolio->twitter_url)
-                <a class="biz-btn biz-btn-ghost" href="{{ $portfolio->twitter_url }}" target="_blank">Twitter/X</a>
+                <a class="biz-btn biz-btn-ghost" href="{{ $portfolio->twitter_url }}" target="_blank" rel="noopener">Twitter/X</a>
               @endif
             </div>
           </div>
@@ -153,17 +203,17 @@
 
             <div class="biz-links">
               @if($portfolio->linkedin_url)
-                <a class="biz-link" href="{{ $portfolio->linkedin_url }}" target="_blank">
+                <a class="biz-link" href="{{ $portfolio->linkedin_url }}" target="_blank" rel="noopener">
                   <span>LinkedIn</span><span class="biz-arrow">→</span>
                 </a>
               @endif
               @if($portfolio->github_url)
-                <a class="biz-link" href="{{ $portfolio->github_url }}" target="_blank">
+                <a class="biz-link" href="{{ $portfolio->github_url }}" target="_blank" rel="noopener">
                   <span>GitHub</span><span class="biz-arrow">→</span>
                 </a>
               @endif
               @if($portfolio->twitter_url)
-                <a class="biz-link" href="{{ $portfolio->twitter_url }}" target="_blank">
+                <a class="biz-link" href="{{ $portfolio->twitter_url }}" target="_blank" rel="noopener">
                   <span>Twitter/X</span><span class="biz-arrow">→</span>
                 </a>
               @endif
@@ -248,61 +298,87 @@
     </div>
   </section>
 
-  {{-- PROJECTS (FULL WIDTH) --}}
-  @if($portfolio->projects->count() > 0)
-    <section class="biz-section biz-projects-section" id="projects">
-      <div class="container">
-        <div class="biz-panel biz-panel-wide">
-          <div class="biz-panel-head">
-            <h3 class="biz-h3">Projects</h3>
-            <div class="biz-mini">Selected work & outcomes</div>
-          </div>
+ {{-- PROJECTS (FULL WIDTH) --}}
+@if($portfolio->projects->count() > 0)
+  <section class="biz-section biz-projects-section" id="projects">
+    <div class="container">
+      <div class="biz-panel biz-panel-wide">
+        <div class="biz-panel-head">
+          <h3 class="biz-h3">Projects</h3>
+          <div class="biz-mini">Selected work & outcomes</div>
+        </div>
 
-          <div class="biz-projects-grid">
-            @foreach($portfolio->projects as $p)
-              @php
-                $img = null;
-                if (!empty($p->image_path)) {
-                  if (preg_match('/^https?:\/\//i', $p->image_path)) $img = $p->image_path;
-                  elseif (str_starts_with($p->image_path, 'storage/')) $img = asset($p->image_path);
-                  else $img = \Illuminate\Support\Facades\Storage::url($p->image_path);
-                }
-              @endphp
+        <div class="biz-projects-grid">
+   @foreach($portfolio->projects as $p)
+ @php
+  $img = null;
 
-              <article class="biz-project-card">
-                <div class="biz-project-media">
-                  @if($img)
-                    <img src="{{ $img }}" alt="{{ $p->title }}" loading="lazy" decoding="async">
-                  @else
-                    <div class="biz-project-placeholder">
-                      <div class="biz-ph-line w80"></div>
-                      <div class="biz-ph-line w60"></div>
-                      <div class="biz-ph-line w90"></div>
-                    </div>
-                  @endif
+  if (!empty($p->image_path)) {
+    // external URL stays as-is
+    if (preg_match('/^https?:\/\//i', $p->image_path)) {
+      $img = $p->image_path;
+    } else {
+      // ✅ relative URL = same origin always
+      $img = '/storage/' . ltrim($p->image_path, '/');
+    }
+  }
+@endphp
+            <article class="biz-project-card">
+              <div class="biz-project-media">
+                @if($img)
+                  <img src="{{ $img }}" alt="{{ $p->title }}" loading="lazy" decoding="async">
+                @else
+                  <div class="biz-project-placeholder">
+                    <div class="biz-ph-line w80"></div>
+                    <div class="biz-ph-line w60"></div>
+                    <div class="biz-ph-line w90"></div>
+                  </div>
+                @endif
+              </div>
+
+              <div class="biz-project-body">
+                <div class="biz-project-title">{{ $p->title }}</div>
+
+                {{-- Short first, full on hover (CSS handles clamp/expand) --}}
+                <div class="biz-project-desc biz-clamp">
+                  {{ $p->description }}
                 </div>
 
-                <div class="biz-project-body">
-                  <div class="biz-project-title">{{ $p->title }}</div>
-                  <div class="biz-project-desc">{{ $p->description }}</div>
-
-                  <div class="biz-project-actions">
+                {{-- Clean links (optional) --}}
+                @if($p->live_url || $p->github_url)
+                  <div class="biz-project-links">
                     @if($p->live_url)
-                      <a class="biz-pill biz-pill-primary" href="{{ $p->live_url }}" target="_blank">Live</a>
+                      <a class="biz-project-link" href="{{ $p->live_url }}" target="_blank" rel="noopener">
+                        🔗 Live
+                      </a>
                     @endif
+
                     @if($p->github_url)
-                      <a class="biz-pill biz-pill-ghost" href="{{ $p->github_url }}" target="_blank">GitHub</a>
+                      <a class="biz-project-link" href="{{ $p->github_url }}" target="_blank" rel="noopener">
+                        💻 GitHub
+                      </a>
                     @endif
                   </div>
-                </div>
-              </article>
-            @endforeach
-          </div>
+                @endif
 
+                {{-- Buttons (keep) --}}
+                <div class="biz-project-actions">
+                  @if($p->live_url)
+                    <a class="biz-pill biz-pill-primary" href="{{ $p->live_url }}" target="_blank" rel="noopener">Live</a>
+                  @endif
+                  @if($p->github_url)
+                    <a class="biz-pill biz-pill-ghost" href="{{ $p->github_url }}" target="_blank" rel="noopener">GitHub</a>
+                  @endif
+                </div>
+              </div>
+            </article>
+          @endforeach
         </div>
+
       </div>
-    </section>
-  @endif
+    </div>
+  </section>
+@endif
 
   <footer class="biz-footer-pro">
     <div class="container">
@@ -325,9 +401,9 @@
 
         <div class="biz-footer-links">
           <div class="biz-footer-h">Social</div>
-          @if($portfolio->linkedin_url)<a href="{{ $portfolio->linkedin_url }}" target="_blank">LinkedIn</a>@endif
-          @if($portfolio->github_url)<a href="{{ $portfolio->github_url }}" target="_blank">GitHub</a>@endif
-          @if($portfolio->twitter_url)<a href="{{ $portfolio->twitter_url }}" target="_blank">Twitter/X</a>@endif
+          @if($portfolio->linkedin_url)<a href="{{ $portfolio->linkedin_url }}" target="_blank" rel="noopener">LinkedIn</a>@endif
+          @if($portfolio->github_url)<a href="{{ $portfolio->github_url }}" target="_blank" rel="noopener">GitHub</a>@endif
+          @if($portfolio->twitter_url)<a href="{{ $portfolio->twitter_url }}" target="_blank" rel="noopener">Twitter/X</a>@endif
           @if(!$portfolio->linkedin_url && !$portfolio->github_url && !$portfolio->twitter_url)
             <div class="biz-footer-muted">No social links added.</div>
           @endif
@@ -352,6 +428,24 @@
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
+
+    function pgCopyPublicLink(){
+      const el = document.getElementById('pgPublicLink');
+      if(!el) return;
+
+      const text = (el.getAttribute('href') || el.textContent || '').trim();
+      if(!text) return;
+
+      navigator.clipboard.writeText(text)
+        .then(() => {
+          const btns = document.querySelectorAll('.pg-pubbar-btn');
+          btns.forEach(b => b.classList.add('is-copied'));
+          setTimeout(() => btns.forEach(b => b.classList.remove('is-copied')), 900);
+        })
+        .catch(() => {
+          alert('Copy failed. Please copy manually.');
+        });
+    }
   </script>
 
 </body>
