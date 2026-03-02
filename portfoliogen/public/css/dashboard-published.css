@@ -211,7 +211,7 @@ html,body{ height:100%; }
   margin-top: 4px;
 }
 
-/* alerts (bootstrap-like, but themed) */
+/* alerts */
 .alert{
   border-radius: 16px;
   border: 1px solid rgba(255,255,255,0.12);
@@ -229,7 +229,7 @@ html,body{ height:100%; }
   background: rgba(255,80,110,0.10);
 }
 
-/* table wrapper (works even if you use .table-responsive) */
+/* table wrapper */
 .table-responsive,
 .pg-table-wrap{
   border-radius: 20px;
@@ -242,9 +242,9 @@ html,body{ height:100%; }
 /* table */
 .pg-table{
   width: 100%;
-  table-layout: fixed;             /* IMPORTANT: prevents overlap */
+  table-layout: fixed;
   border-collapse: separate;
-  border-spacing: 0 12px;          /* gap between rows */
+  border-spacing: 0 12px;
 }
 
 /* header */
@@ -277,35 +277,15 @@ html,body{ height:100%; }
 .pg-table tbody tr td:first-child{ border-radius: 16px 0 0 16px; }
 .pg-table tbody tr td:last-child{ border-radius: 0 16px 16px 0; }
 
-/* column widths */
+/* ✅ column widths for 3 columns */
 .pg-table thead th:nth-child(1),
-.pg-table tbody td:nth-child(1){ width: 160px; }
+.pg-table tbody td:nth-child(1){ width: 180px; }
 
 .pg-table thead th:nth-child(2),
-.pg-table tbody td:nth-child(2){ width: 170px; }
+.pg-table tbody td:nth-child(2){ width: 190px; }
 
-.pg-table thead th:nth-child(4),
-.pg-table tbody td:nth-child(4){ width: 520px; } /* actions column */
-
-/* ✅ Public link column: allow wrapping (fix overlap) */
 .pg-table thead th:nth-child(3),
-.pg-table tbody td:nth-child(3){
-  width: auto;
-}
-.pg-table tbody td:nth-child(3){
-  white-space: normal;            /* allow wrap */
-  overflow: visible;
-}
-.pg-table tbody td:nth-child(3) a{
-  display: inline-block;
-  max-width: 100%;
-  word-break: break-all;
-  color: rgba(200,230,255,0.95);
-  text-decoration: none;
-}
-.pg-table tbody td:nth-child(3) a:hover{
-  text-decoration: underline;
-}
+.pg-table tbody td:nth-child(3){ width: auto; }
 
 /* actions */
 .pg-actions{
@@ -313,8 +293,8 @@ html,body{ height:100%; }
   justify-content: flex-end;
   align-items: center;
   gap: 8px;
-  flex-wrap: nowrap;
-  white-space: nowrap;
+  flex-wrap: wrap;          /* ✅ allow wrap now */
+  white-space: normal;
 }
 
 .pg-inline{
@@ -324,7 +304,7 @@ html,body{ height:100%; }
   padding: 0;
 }
 
-/* action buttons (button + link same style) */
+/* action buttons */
 .pg-act{
   height: 34px;
   padding: 0 14px;
@@ -343,18 +323,15 @@ html,body{ height:100%; }
   font-family: inherit;
   transition: .16s ease;
 }
-
 .pg-act:hover{
   transform: translateY(-1px);
   border-color: rgba(255,255,255,0.25);
 }
-
 .pg-act.primary{
   background: linear-gradient(90deg, #4f46e5, #3A9AFF);
   border: none;
   color: #fff;
 }
-
 .pg-act.danger{
   border: 1px solid rgba(255,80,110,0.55);
   background: rgba(255,80,110,0.12);
@@ -386,24 +363,19 @@ html,body{ height:100%; }
 @media (max-width: 1050px){
   .pg-shell{ grid-template-columns: 1fr; }
   .pg-side{ position: relative; height: auto; }
-  .pg-table thead th:nth-child(4),
-  .pg-table tbody td:nth-child(4){ width: auto; }
-  .pg-actions{ flex-wrap: wrap; justify-content: flex-start; }
+  .pg-actions{ justify-content: flex-start; }
 }
 
 /* =========================================================
    ✅ Responsive Pack (Phone / Tablet / Laptop / Desktop)
-   Paste at END of dashboard-published.css
 ========================================================= */
 
-/* ---------- Big screens (>= 1400px) ---------- */
 @media (min-width: 1400px){
   .pg-shell{ max-width: 1500px; }
   .pg-hello{ font-size: 34px; }
   .pg-main{ padding: 20px; }
 }
 
-/* ---------- Laptop / Desktop (992px - 1399px) ---------- */
 @media (min-width: 992px) and (max-width: 1399.98px){
   .pg-shell{
     grid-template-columns: 260px 1fr;
@@ -413,10 +385,9 @@ html,body{ height:100%; }
   .pg-hello{ font-size: 30px; }
 }
 
-/* ---------- Tablet (768px - 991px) ---------- */
 @media (min-width: 768px) and (max-width: 991.98px){
   .pg-shell{
-    grid-template-columns: 1fr;  /* sidebar goes top */
+    grid-template-columns: 1fr;
     gap: 14px;
     padding: 14px;
   }
@@ -437,19 +408,8 @@ html,body{ height:100%; }
     justify-content: flex-start;
   }
 
-  /* table: stop fixed widths on tablet */
   .pg-table{ table-layout: auto; }
-  .pg-table thead th,
-  .pg-table tbody td{
-    white-space: nowrap;
-  }
 
-  /* public link can wrap */
-  .pg-table tbody td:nth-child(3){
-    white-space: normal;
-  }
-
-  /* actions wrap nicely */
   .pg-actions{
     justify-content: flex-start;
     flex-wrap: wrap;
@@ -457,7 +417,6 @@ html,body{ height:100%; }
   }
 }
 
-/* ---------- Phone (<= 767px) ---------- */
 @media (max-width: 767.98px){
   .pg-shell{
     grid-template-columns: 1fr;
@@ -484,9 +443,7 @@ html,body{ height:100%; }
     gap: 10px;
   }
 
-  .pg-hello{
-    font-size: 24px;
-  }
+  .pg-hello{ font-size: 24px; }
   .pg-hello small{
     font-size: 13px;
     max-width: 100%;
@@ -503,29 +460,17 @@ html,body{ height:100%; }
     border-radius: 12px;
   }
 
-  /* make table horizontally scrollable on phone */
   .table-responsive,
   .pg-table-wrap{
     padding: 8px;
   }
 
   .pg-table{
-    min-width: 760px; /* forces scroll instead of breaking layout */
+    min-width: 620px;
     table-layout: auto;
     border-spacing: 0 10px;
   }
 
-  /* remove forced column widths (phone) */
-  .pg-table thead th:nth-child(1),
-  .pg-table tbody td:nth-child(1),
-  .pg-table thead th:nth-child(2),
-  .pg-table tbody td:nth-child(2),
-  .pg-table thead th:nth-child(4),
-  .pg-table tbody td:nth-child(4){
-    width: auto !important;
-  }
-
-  /* actions: allow wrap */
   .pg-actions{
     justify-content: flex-start;
     flex-wrap: wrap;
@@ -539,7 +484,6 @@ html,body{ height:100%; }
   }
 }
 
-/* ---------- Small phone (<= 420px) ---------- */
 @media (max-width: 420px){
   .pg-hello{ font-size: 22px; }
   .pg-card-head h5{ font-size: 18px; }

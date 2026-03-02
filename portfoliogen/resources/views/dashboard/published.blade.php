@@ -30,18 +30,19 @@
     </aside>
 
     <main class="pg-main">
-    <div class="pg-topbar">
-  <h1 class="pg-hello">
-    Published Portfolios
-    <small>Open / Copy / Unpublish / Delete</small>
-  </h1>
 
-  <div class="pg-topbar-actions">
-    <a class="pg-btn pg-btn-ghost" href="{{ route('dashboard', ['username' => $u]) }}">
-      ← Back
-    </a>
-  </div>
-</div>
+      <div class="pg-topbar">
+        <h1 class="pg-hello">
+          Published Portfolios
+          <small>Open / Copy / Unpublish / Delete</small>
+        </h1>
+
+        <div class="pg-topbar-actions">
+          <a class="pg-btn pg-btn-ghost" href="{{ route('dashboard', ['username' => $u]) }}">
+            ← Back
+          </a>
+        </div>
+      </div>
 
       @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
@@ -61,7 +62,7 @@
         <section class="pg-card pg-table-card">
           <div class="pg-card-head">
             <div>
-              <h5>All Published Links</h5>
+              <h5>All Published Portfolios</h5>
               <div class="sub">Manage your public portfolios</div>
             </div>
           </div>
@@ -72,7 +73,6 @@
                 <tr>
                   <th>Template</th>
                   <th>Published At</th>
-                  <th>Public Link</th>
                   <th class="text-end">Actions</th>
                 </tr>
               </thead>
@@ -93,17 +93,12 @@
                       {{ optional($p->published_at)->format('Y-m-d H:i') }}
                     </td>
 
-                    <td style="max-width:520px;">
-                      <a href="{{ $publicUrl }}" target="_blank" rel="noopener" style="word-break:break-all;">
-                        {{ $publicUrl }}
-                      </a>
-                    </td>
-
                     <td class="text-end">
                       <div class="pg-actions">
 
                         <button type="button" class="pg-act"
-                          onclick="navigator.clipboard.writeText(@js($publicUrl)).then(()=>alert('Copied!')).catch(()=>alert('Copy failed'));">
+                          onclick="navigator.clipboard.writeText(@js($publicUrl)).then(()=>alert('Copied!')).catch(()=>alert('Copy failed'));"
+                        >
                           Copy
                         </button>
 
