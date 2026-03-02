@@ -390,3 +390,157 @@ html,body{ height:100%; }
   .pg-table tbody td:nth-child(4){ width: auto; }
   .pg-actions{ flex-wrap: wrap; justify-content: flex-start; }
 }
+
+/* =========================================================
+   ✅ Responsive Pack (Phone / Tablet / Laptop / Desktop)
+   Paste at END of dashboard-published.css
+========================================================= */
+
+/* ---------- Big screens (>= 1400px) ---------- */
+@media (min-width: 1400px){
+  .pg-shell{ max-width: 1500px; }
+  .pg-hello{ font-size: 34px; }
+  .pg-main{ padding: 20px; }
+}
+
+/* ---------- Laptop / Desktop (992px - 1399px) ---------- */
+@media (min-width: 992px) and (max-width: 1399.98px){
+  .pg-shell{
+    grid-template-columns: 260px 1fr;
+    gap: 18px;
+    padding: 18px;
+  }
+  .pg-hello{ font-size: 30px; }
+}
+
+/* ---------- Tablet (768px - 991px) ---------- */
+@media (min-width: 768px) and (max-width: 991.98px){
+  .pg-shell{
+    grid-template-columns: 1fr;  /* sidebar goes top */
+    gap: 14px;
+    padding: 14px;
+  }
+  .pg-side{
+    position: relative;
+    top: 0;
+    height: auto;
+    padding: 14px;
+  }
+
+  .pg-topbar{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .pg-topbar-actions{
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  /* table: stop fixed widths on tablet */
+  .pg-table{ table-layout: auto; }
+  .pg-table thead th,
+  .pg-table tbody td{
+    white-space: nowrap;
+  }
+
+  /* public link can wrap */
+  .pg-table tbody td:nth-child(3){
+    white-space: normal;
+  }
+
+  /* actions wrap nicely */
+  .pg-actions{
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+/* ---------- Phone (<= 767px) ---------- */
+@media (max-width: 767.98px){
+  .pg-shell{
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .pg-side{
+    position: relative;
+    top: 0;
+    height: auto;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .pg-main{
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .pg-topbar{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .pg-hello{
+    font-size: 24px;
+  }
+  .pg-hello small{
+    font-size: 13px;
+    max-width: 100%;
+  }
+
+  .pg-topbar-actions{
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+  .pg-btn,
+  .pg-btn-ghost{
+    padding: 10px 14px;
+    border-radius: 12px;
+  }
+
+  /* make table horizontally scrollable on phone */
+  .table-responsive,
+  .pg-table-wrap{
+    padding: 8px;
+  }
+
+  .pg-table{
+    min-width: 760px; /* forces scroll instead of breaking layout */
+    table-layout: auto;
+    border-spacing: 0 10px;
+  }
+
+  /* remove forced column widths (phone) */
+  .pg-table thead th:nth-child(1),
+  .pg-table tbody td:nth-child(1),
+  .pg-table thead th:nth-child(2),
+  .pg-table tbody td:nth-child(2),
+  .pg-table thead th:nth-child(4),
+  .pg-table tbody td:nth-child(4){
+    width: auto !important;
+  }
+
+  /* actions: allow wrap */
+  .pg-actions{
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    white-space: normal;
+  }
+  .pg-act{
+    height: 36px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+}
+
+/* ---------- Small phone (<= 420px) ---------- */
+@media (max-width: 420px){
+  .pg-hello{ font-size: 22px; }
+  .pg-card-head h5{ font-size: 18px; }
+}

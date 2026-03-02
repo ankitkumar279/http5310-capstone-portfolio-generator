@@ -427,3 +427,148 @@
   .pg-template, .pg-feature, .pg-btn{ transition: none !important; }
 }
 
+/* =========================================================
+   ✅ RESPONSIVE PACK (Landing page)
+   Phone / Tablet / Laptop / Big Desktop
+   Paste at END
+========================================================= */
+
+/* ---------- Big desktop (>= 1400px) ---------- */
+@media (min-width: 1400px){
+  .pg-hero{ padding-top: 2.6rem; padding-bottom: 1.8rem; }
+  .pg-sub{ font-size: 1.12rem; max-width: 60ch; }
+  .pg-feature{ padding: 1.35rem 1.35rem; }
+  .pg-template-body{ padding: 1.1rem 1.1rem; }
+}
+
+/* ---------- Laptop/Desktop (992px - 1399px) ---------- */
+@media (min-width: 992px) and (max-width: 1399.98px){
+  .pg-hero{ padding-top: 2.1rem; padding-bottom: 1.6rem; }
+  .pg-sub{ max-width: 56ch; }
+}
+
+/* ---------- Tablet (768px - 991px) ---------- */
+@media (min-width: 768px) and (max-width: 991.98px){
+  .pg-hero{ padding-top: 1.7rem; padding-bottom: 1.1rem; }
+
+  .pg-title{
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+  }
+
+  .pg-sub{
+    font-size: 1.0rem;
+    max-width: 100%;
+  }
+
+  /* calmer blobs so they don’t cover content */
+  .pg-blob.one{
+    width: 420px; height: 420px;
+    left: -170px; top: 140px;
+    opacity: .50;
+  }
+  .pg-blob.two{
+    width: 420px; height: 420px;
+    right: -180px; top: -110px;
+    opacity: .45;
+  }
+  .pg-blob.three{
+    width: 520px; height: 520px;
+    left: 25%; bottom: -320px;
+    opacity: .45;
+  }
+
+  /* cards slightly tighter */
+  .pg-feature{ padding: 1.05rem 1.05rem; }
+  .pg-template-body{ padding: .95rem .95rem; }
+
+  /* hero media: reduce zoom crop */
+  .pg-media img{ transform: none; }
+}
+
+/* ---------- Phone (<= 767px) ---------- */
+@media (max-width: 767.98px){
+  .pg-landing{
+    overflow-x: hidden;
+    padding-top: 0;
+  }
+
+  .pg-hero{ padding-top: 1.25rem; padding-bottom: .9rem; }
+
+  .pg-kicker{
+    font-size: .82rem;
+    padding: .42rem .7rem;
+  }
+
+  .pg-title{
+    font-size: clamp(1.7rem, 7vw, 2.35rem);
+    line-height: 1.06;
+  }
+
+  .pg-sub{
+    font-size: .98rem;
+    max-width: 100%;
+  }
+
+  .pg-divider{ margin: 1.7rem 0; }
+
+  /* blobs smaller + lighter so text stays readable */
+  .pg-ambient{ filter: blur(26px); opacity: .75; }
+  .pg-blob.one{
+    width: 340px; height: 340px;
+    left: -210px; top: 160px;
+    opacity: .45;
+  }
+  .pg-blob.two{
+    width: 340px; height: 340px;
+    right: -210px; top: -140px;
+    opacity: .40;
+  }
+  .pg-blob.three{
+    width: 420px; height: 420px;
+    left: 12%; bottom: -360px;
+    opacity: .40;
+  }
+
+  /* buttons become full-width (touch friendly) */
+  .pg-btn{
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+  }
+
+  /* cards tighter + remove hover jump on touch */
+  .pg-feature{ padding: 1rem 1rem; }
+  .pg-template-body{ padding: .95rem .95rem; }
+  .pg-feature:hover,
+  .pg-template:hover{
+    transform: none;
+  }
+
+  /* media zoom off on mobile */
+  .pg-media img{ transform: none; }
+
+  /* template thumbs: less aggressive zoom */
+  .pg-thumb img{ transform: none; }
+  .pg-template:hover .pg-thumb img{ transform: none; }
+
+  /* footer spacing */
+  .pg-footer{
+    margin-top: 2.4rem;
+    padding-top: 1.6rem;
+    padding-bottom: 1.1rem;
+  }
+  .pg-footer-text{ max-width: 100%; }
+}
+
+/* ---------- Small phone (<= 420px) ---------- */
+@media (max-width: 420px){
+  .pg-title{ font-size: clamp(1.55rem, 8vw, 2.05rem); }
+  .pg-icon{ width: 40px; height: 40px; border-radius: 13px; }
+  .pg-footer-copy{ font-size: .92rem; }
+}
+
+/* ---------- Extra: reduce animations on low motion devices ---------- */
+@media (prefers-reduced-motion: reduce){
+  .pg-blob{ animation: none !important; }
+  .pg-blob, .pg-ambient{ transform: none !important; }
+}

@@ -259,3 +259,155 @@
   .pg-auth-title{ font-size: 34px; }
   .pg-left-copy h2{ font-size: 30px; }
 }
+
+/* ---------- Large Desktop (>= 1400px) ---------- */
+@media (min-width: 1400px){
+  .pg-auth-shell{
+    width: min(1240px, 100%);
+  }
+  .pg-auth-right{
+    padding: 42px 42px;
+  }
+  .pg-auth-card{
+    padding: 34px;
+  }
+  .pg-auth-title{
+    font-size: 48px;
+  }
+  .pg-left-copy h2{
+    font-size: 40px;
+  }
+}
+
+/* ---------- Laptop/Desktop (992px - 1399px) ---------- */
+@media (min-width: 992px) and (max-width: 1399.98px){
+  .pg-auth-left{
+    min-height: 600px;
+  }
+  .pg-auth-right{
+    padding: 34px 30px;
+  }
+  .pg-auth-title{
+    font-size: 44px;
+  }
+}
+
+/* ---------- Tablet (768px - 991px) ---------- */
+@media (min-width: 768px) and (max-width: 991.98px){
+  /* stack but keep good spacing */
+  .pg-auth-shell{
+    border-radius: 18px;
+  }
+
+  .pg-auth-left{
+    min-height: 320px;
+  }
+
+  .pg-auth-left-content{
+    padding: 18px;
+  }
+
+  .pg-left-copy{
+    max-width: 520px;
+  }
+  .pg-left-copy h2{
+    font-size: 32px;
+  }
+
+  .pg-auth-right{
+    padding: 18px 16px;
+  }
+  .pg-auth-card{
+    padding: 20px;
+    max-width: 560px;
+  }
+  .pg-auth-title{
+    font-size: 36px;
+  }
+
+  .pg-pill{
+    font-size: 12.5px;
+    padding: 7px 11px;
+  }
+}
+
+/* ---------- Phone (<= 767px) ---------- */
+@media (max-width: 767.98px){
+  .pg-auth-wrap{
+    padding: 18px 12px;
+  }
+
+  .pg-auth-shell{
+    border-radius: 16px;
+  }
+
+  /* left becomes a short hero */
+  .pg-auth-left{
+    min-height: 240px;
+  }
+
+  .pg-auth-left-content{
+    padding: 16px;
+  }
+
+  .pg-brand-mark img{
+    height: 22px;
+  }
+
+  .pg-pill{
+    font-size: 12px;
+    padding: 7px 10px;
+    gap: 8px;
+  }
+
+  .pg-left-copy h2{
+    font-size: 26px;
+    margin-bottom: 8px;
+  }
+  .pg-left-copy p{
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .pg-dots{
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .pg-dot{
+    width: 20px;
+  }
+
+  .pg-auth-right{
+    padding: 14px 12px;
+  }
+
+  .pg-auth-card{
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .pg-auth-title{
+    font-size: 30px;
+  }
+
+  .pg-input{
+    padding: 11px 12px !important;
+  }
+
+  .pg-btn-gradient{
+    width: 100%;
+  }
+}
+
+/* ---------- Small Phone (<= 420px) ---------- */
+@media (max-width: 420px){
+  .pg-auth-left{
+    min-height: 210px;
+  }
+  .pg-auth-title{
+    font-size: 28px;
+  }
+  .pg-left-copy h2{
+    font-size: 24px;
+  }
+}

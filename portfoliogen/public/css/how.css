@@ -208,3 +208,139 @@
 @media (prefers-reduced-motion: reduce){
   .pg-step{ transition:none !important; }
 }
+
+/* =========================================================
+   ✅ RESPONSIVE PACK (How page)
+   Paste at END
+========================================================= */
+
+/* ---------- Large desktop (>= 1400px) ---------- */
+@media (min-width: 1400px){
+  .pg-how-hero{ padding: 2.8rem 0 1.6rem; }
+  .pg-how-sub{ font-size: 1.12rem; }
+  .pg-step{ padding: 1.35rem 1.35rem; }
+  .pg-step-media{ min-height: 260px; }
+}
+
+/* ---------- Laptop/Desktop (992px - 1399px) ---------- */
+@media (min-width: 992px) and (max-width: 1399.98px){
+  .pg-how-hero{ padding: 2.4rem 0 1.3rem; }
+  .pg-step-media{ min-height: 230px; }
+}
+
+/* ---------- Tablet (768px - 991px) ---------- */
+@media (min-width: 768px) and (max-width: 991.98px){
+  .pg-how-hero{ padding: 2.0rem 0 1.0rem; }
+
+  .pg-how-sub{
+    font-size: 1.0rem;
+    max-width: 100%;
+  }
+
+  .pg-step{
+    padding: 1.1rem 1.1rem;
+  }
+
+  .pg-step-num{
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+  }
+
+  .pg-step-media{
+    min-height: 200px;
+    border-radius: 18px;
+  }
+
+  .pg-mini{ padding: .9rem .9rem; }
+  .pg-mini .icon{ width: 42px; height: 42px; }
+
+  .pg-cta{
+    padding: 1.25rem 1.1rem;
+    border-radius: 18px;
+  }
+}
+
+/* ---------- Phone (<= 767px) ---------- */
+@media (max-width: 767.98px){
+  .pg-how{ padding-top: 0; }
+
+  .pg-how-hero{
+    padding: 1.6rem 0 .8rem;
+  }
+
+  .pg-how-kicker{
+    font-size: .82rem;
+    padding: .42rem .7rem;
+  }
+
+  .pg-how-title{
+    font-size: clamp(1.75rem, 7vw, 2.4rem);
+    line-height: 1.06;
+  }
+
+  .pg-how-sub{
+    font-size: .98rem;
+    max-width: 100%;
+  }
+
+  .pg-how .pg-divider{
+    margin: 1.6rem 0;
+  }
+
+  .pg-step{
+    padding: 1rem 1rem;
+  }
+
+  .pg-step:hover{
+    transform: none; /* avoid jumpy hover on touch */
+  }
+
+  .pg-step-num{
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+  }
+
+  .pg-step h5{ margin: .7rem 0 .3rem; }
+
+  /* media smaller + safer */
+  .pg-step-media{
+    min-height: 170px;
+    border-radius: 18px;
+  }
+  .pg-step-media img{
+    transform: none; /* reduce crop on small screens */
+  }
+
+  .pg-mini{
+    padding: .85rem .9rem;
+    text-align: left;
+  }
+  .pg-mini .icon{
+    margin: 0 0 .6rem;
+  }
+
+  /* CTA full width button */
+  .pg-cta{
+    padding: 1.15rem 1rem;
+    border-radius: 18px;
+  }
+  .pg-cta .btn{
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+  }
+}
+
+/* ---------- Small phone (<= 420px) ---------- */
+@media (max-width: 420px){
+  .pg-how-hero{ padding: 1.4rem 0 .7rem; }
+  .pg-step-media{ min-height: 150px; }
+  .pg-mini .d{ font-size: .9rem; }
+}
+
+/* ---------- Optional: smoother images on mobile ---------- */
+@media (max-width: 767.98px){
+  .pg-step-media img{ object-position: center; }
+}

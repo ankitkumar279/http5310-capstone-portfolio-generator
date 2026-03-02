@@ -500,3 +500,164 @@ select.pg-input:focus{
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* =========================================================
+   ✅ Wizard Responsive Pack (Dark SaaS)
+   Paste at VERY END
+========================================================= */
+
+/* ---------- Large Desktop (>= 1400px) ---------- */
+@media (min-width: 1400px){
+  .pg-step-box{
+    max-width: 1220px;
+    padding: 44px;
+  }
+  .pg-step-title{ font-size: 30px; }
+  .pg-form-grid{ gap: 34px; }
+}
+
+/* ---------- Desktop/Laptop (992px - 1399px) ---------- */
+@media (min-width: 992px) and (max-width: 1399.98px){
+  .pg-step-box{ padding: 38px; }
+  .pg-form-grid{ gap: 28px; }
+}
+
+/* ---------- Tablet (768px - 991px) ---------- */
+@media (min-width: 768px) and (max-width: 991.98px){
+  .pg-step-wrapper{ padding: 28px 16px; }
+
+  .pg-step-box{
+    padding: 28px;
+    border-radius: 24px;
+  }
+
+  /* Header wraps nicely */
+  .pg-step-header{
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .pg-step-title{ font-size: 24px; }
+  .pg-exit{ margin-left: auto; }
+
+  /* Step pills wrap */
+  .pg-steps{ gap: 8px; }
+  .pg-step-pill{ font-size: 12.5px; padding: 8px 12px; }
+
+  /* Grid becomes 1 column (you already do at 900px, this is cleaner) */
+  .pg-form-grid{
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  /* Make lists not crazy tall */
+  .pg-projects-grid .pg-edu-list,
+  .pg-exp-grid .pg-edu-list{
+    max-height: 420px;
+  }
+}
+
+/* ---------- Phone (<= 767px) ---------- */
+@media (max-width: 767.98px){
+  .pg-step-wrapper{ padding: 18px 12px; }
+
+  .pg-step-box{
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  /* Header stacked */
+  .pg-step-header{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .pg-step-title{ font-size: 20px; }
+  .pg-exit{
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* Pills become scrollable row (best UX on phone) */
+  .pg-steps{
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pg-step-pill{
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: 12.5px;
+  }
+  .pg-steps::-webkit-scrollbar{ height: 8px; }
+  .pg-steps::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,.12);
+    border-radius: 999px;
+  }
+
+  /* Main grid 1 col */
+  .pg-form-grid{
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* Cards tighter */
+  .pg-card{ padding: 16px; border-radius: 18px; }
+
+  /* Inputs + buttons */
+  .pg-input{ padding: 11px 12px; border-radius: 14px; }
+  .pg-submit{ width: 100%; }
+
+  /* Button row stacks */
+  .pg-btn-row{
+    flex-direction: column;
+    gap: 10px;
+  }
+  .pg-btn{ width: 100%; }
+
+  /* EDU item wraps (so delete button doesn’t crush text) */
+  .pg-edu-item{
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .pg-delete-btn{
+    margin-left: auto;
+  }
+
+  /* Right panels list: shorter + smoother */
+  .pg-projects-grid .pg-edu-list,
+  .pg-exp-grid .pg-edu-list{
+    max-height: 320px;
+    padding-right: 2px;
+  }
+
+  /* Clamp description a bit more on phone */
+  .pg-projects-grid .pg-edu-item .pg-muted,
+  .pg-exp-grid .pg-edu-item .pg-muted{
+    -webkit-line-clamp: 4;
+  }
+}
+
+/* ---------- Small phone (<= 420px) ---------- */
+@media (max-width: 420px){
+  .pg-step-box{ padding: 16px; }
+  .pg-step-title{ font-size: 19px; }
+  .pg-card{ padding: 14px; }
+}
+
+/* ---------- Touch devices: remove hover “jump” ---------- */
+@media (hover: none){
+  .pg-submit:hover,
+  .pg-btn-primary:hover,
+  .pg-btn-outline:hover,
+  .pg-btn-secondary:hover,
+  .pg-exit:hover,
+  .pg-delete-btn:hover{
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}

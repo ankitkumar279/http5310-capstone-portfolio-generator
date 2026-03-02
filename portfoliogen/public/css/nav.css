@@ -256,3 +256,122 @@
 @media (prefers-reduced-motion: reduce){
   .pg-nav .nav-link, .pg-nav .pg-btn-sm{ transition:none !important; }
 }
+
+/* =========================================================
+   ✅ RESPONSIVE PACK (Navbar + Footer)
+   Paste at END
+========================================================= */
+
+/* ---------- Big desktop (>= 1400px) ---------- */
+@media (min-width: 1400px){
+  .pg-logo img{ height: 48px; }
+  .navbar{ padding-top: .85rem; padding-bottom: .85rem; }
+}
+
+/* ---------- Laptop/Desktop (992px - 1399px) ---------- */
+@media (min-width: 992px) and (max-width: 1399.98px){
+  .pg-logo img{ height: 44px; }
+}
+
+/* ---------- Tablet (768px - 991px) ---------- */
+@media (min-width: 768px) and (max-width: 991.98px){
+  .pg-logo img{ height: 40px; }
+  .navbar{ padding-top: .65rem; padding-bottom: .65rem; }
+
+  /* slightly tighter links */
+  .pg-nav .nav-link{
+    padding: .5rem .65rem;
+    border-radius: 12px;
+  }
+
+  /* dropdown a bit wider */
+  .pg-nav .dropdown-menu{
+    min-width: 220px;
+  }
+}
+
+/* ---------- Mobile (<= 991px) collapsed navbar tweaks ---------- */
+@media (max-width: 991.98px){
+  /* make the collapsed menu look like a glass panel */
+  .pg-nav .navbar-collapse{
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(10,9,32,0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* nav links become full-width rows */
+  .pg-nav .navbar-nav .nav-link{
+    width: 100%;
+    padding: .72rem .85rem;
+    border-radius: 14px;
+  }
+
+  /* active underline becomes less cramped on mobile */
+  .pg-nav .nav-link.active::after{
+    left: 16px;
+    right: 16px;
+    bottom: 8px;
+  }
+
+  /* buttons in collapse: full width */
+  .pg-nav .pg-btn-sm{
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+  }
+
+  /* improve spacing between nav + buttons */
+  .pg-nav .navbar-nav{
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+}
+
+/* ---------- Phone (<= 767px) ---------- */
+@media (max-width: 767.98px){
+  .pg-logo img{ height: 36px; }
+  .navbar{ padding-top: .55rem; padding-bottom: .55rem; }
+
+  .pg-nav .navbar-toggler{
+    border-radius: 12px;
+    padding: .45rem .6rem;
+  }
+
+  /* dropdown should not overflow on tiny screens */
+  .pg-nav .dropdown-menu{
+    width: 100%;
+    min-width: 0;
+    margin-top: 8px;
+    border-radius: 16px;
+  }
+
+  /* footer spacing */
+  .pg-footer{
+    margin-top: 2.2rem;
+  }
+  .pg-footer-copy{
+    font-size: .92rem;
+  }
+}
+
+/* ---------- Small phone (<= 420px) ---------- */
+@media (max-width: 420px){
+  .pg-logo img{ height: 34px; }
+
+  .pg-nav .nav-link{
+    font-size: 14px;
+  }
+  .pg-nav .pg-btn-sm{
+    padding: .6rem .85rem;
+  }
+
+  .pg-footer-icon{
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+  }
+}

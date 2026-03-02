@@ -682,3 +682,160 @@ body.dev-body{
     width: 100%;
   }
 }
+
+/* =========================================================
+   ✅ RESPONSIVE PACK (Dev Template)
+   Phone / Tablet / Laptop / Big Desktop
+   Paste at END
+========================================================= */
+
+/* ---------- Big desktop (>= 1400px) ---------- */
+@media (min-width: 1400px){
+  .dev-hero{ padding: 64px 0 30px; }
+  .dev-sub{ font-size: 1.1rem; max-width: 62ch; }
+  .dev-hero-card{ min-height: 460px; padding: 28px; }
+  .dev-avatar{ width: 200px; height: 200px; }
+  .dev-avatar-ring{ width: 200px; height: 200px; }
+  .dev-avatar-core{ width: 156px; height: 156px; }
+}
+
+/* ---------- Laptop/Desktop (992px - 1399px) ---------- */
+@media (min-width: 992px) and (max-width: 1399.98px){
+  .dev-hero{ padding: 54px 0 26px; }
+  .dev-hero-card{ min-height: 420px; }
+}
+
+/* ---------- Tablet (768px - 991px) ---------- */
+@media (min-width: 768px) and (max-width: 991.98px){
+  /* NAV wraps clean */
+  .dev-nav{
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+  }
+  .dev-nav-links{ width: 100%; display:flex; flex-wrap: wrap; gap: 8px; }
+  .dev-nav-actions{ width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+
+  /* HERO tighter */
+  .dev-hero{ padding: 40px 0 20px; }
+  .dev-sub{ max-width: 100%; }
+
+  /* hero card: prevent overlap */
+  .dev-hero-card{
+    padding: 18px;
+    min-height: 380px;
+  }
+
+  /* move avatar smaller */
+  .dev-avatar{ right: 16px; top: 28px; width: 150px; height: 150px; }
+  .dev-avatar-ring{ width: 150px; height: 150px; }
+  .dev-avatar-core{ width: 118px; height: 118px; }
+  .dev-avatar-initials{ font-size: 2.4rem; }
+
+  /* quote width */
+  .dev-quote{ width: min(360px, 88%); }
+
+  /* floating icons smaller */
+  .dev-float{ width: 50px; height: 50px; border-radius: 14px; }
+  .dev-float-3{ left: 160px; top: 190px; }
+  .dev-float-4{ right: 90px; bottom: 54px; }
+
+  /* feature grid 1 col */
+  .dev-feature-grid{ grid-template-columns: 1fr; }
+}
+
+/* ---------- Phone (<= 767px) ---------- */
+@media (max-width: 767.98px){
+  /* NAV becomes stacked */
+  .dev-nav{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 0;
+  }
+  .dev-nav-links{
+    width: 100%;
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .dev-nav-actions{
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* buttons more touch friendly */
+  .dev-btn{ padding: 10px 12px; border-radius: 14px; }
+  .dev-icon-btn{ width: 42px; height: 42px; border-radius: 14px; }
+
+  /* HERO */
+  .dev-hero{ padding: 34px 0 18px; }
+  .dev-h1{ font-size: clamp(1.75rem, 7vw, 2.35rem); }
+  .dev-sub{ font-size: 1rem; max-width: 100%; }
+
+  /* mini stats 1 col already on <=992; make spacing tighter */
+  .dev-mini-grid{ gap: 10px; }
+
+  /* hero card becomes normal stacked card */
+  .dev-hero-card{
+    padding: 16px;
+    min-height: auto;
+  }
+
+  /* IMPORTANT: remove absolute avatar/quote/floating overlaps */
+  .dev-avatar,
+  .dev-quote,
+  .dev-float{
+    position: static;
+    inset: auto;
+    transform: none;
+  }
+
+  /* avatar centered */
+  .dev-avatar{
+    width: 150px;
+    height: 150px;
+    margin: 14px auto 6px;
+  }
+  .dev-avatar-ring{ width: 150px; height: 150px; }
+  .dev-avatar-core{ width: 118px; height: 118px; }
+  .dev-avatar-initials{ font-size: 2.3rem; }
+
+  /* floating icons row (instead of random absolute) */
+  .dev-float{
+    display:none; /* simplest + clean on phone */
+  }
+
+  /* quote becomes full width block */
+  .dev-quote{
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  /* sections tighter */
+  .dev-section{ padding: 44px 0; }
+  .dev-section-last{ padding-bottom: 54px; }
+
+  /* feature grid 1 column */
+  .dev-feature-grid{ grid-template-columns: 1fr; }
+
+  /* timeline spacing */
+  .dev-timeline{ padding-left: 22px; }
+  .dev-timeline-rail{ left: 8px; }
+  .dev-timeline-dot{ top: 20px; }
+
+  /* projects: disable hover overlay on touch (always show meta only) */
+  .dev-project-overlay{
+    display:none !important;
+  }
+}
+
+/* ---------- Small phone (<= 420px) ---------- */
+@media (max-width: 420px){
+  .dev-h1{ font-size: clamp(1.55rem, 8vw, 2.05rem); }
+  .dev-btn{ width: 100%; justify-content: center; }
+  .dev-nav-actions{ align-items: stretch; }
+}

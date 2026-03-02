@@ -252,3 +252,111 @@
     flex: 1;
   }
 }
+
+/* =========================================================
+   ✅ Templates Page — Responsive Pack
+   Paste at VERY END of templates CSS
+========================================================= */
+
+/* ---------- Grid helper (works with Bootstrap row/col OR your own grid) ----------
+   If you are using: <div class="row"> <div class="col-md-4"> ...
+   then ignore this block.
+   If you have a container that holds cards, add class="pg-grid" to it.
+*/
+.pg-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+@media (max-width: 992px){
+  .pg-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 576px){
+  .pg-grid{ grid-template-columns: 1fr; gap: 14px; }
+}
+
+/* ---------- Better spacing + safe padding on small screens ---------- */
+@media (max-width: 768px){
+  .pg-templates{ padding: 20px 0 44px; }
+  .pg-templates-title{ font-size: 1.7rem; }
+  .pg-templates-sub{ padding: 0 8px; }
+}
+
+/* ---------- Filters: scroll row on mobile (feels like App Store) ---------- */
+@media (max-width: 576px){
+  .pg-filters{
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 6px 6px 10px;
+    margin-left: -6px;
+    margin-right: -6px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .pg-pill{
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  .pg-filters::-webkit-scrollbar{ height: 8px; }
+  .pg-filters::-webkit-scrollbar-thumb{
+    background: rgba(255,255,255,.12);
+    border-radius: 999px;
+  }
+}
+
+/* ---------- Card: stronger layout on tablet ---------- */
+@media (max-width: 992px){
+  .pg-thumb{ height: 170px; }
+  .pg-body{ padding: 14px 14px 16px; }
+  .pg-title{ font-size: 1.08rem; }
+}
+
+/* ---------- Card: mobile layout (already you have, but improved) ---------- */
+@media (max-width: 576px){
+  .pg-card{ border-radius: 22px; }
+  .pg-thumb{ height: 190px; } /* a bit taller on phone */
+  .pg-actions{
+    width: 100%;
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .pg-btn{
+    height: 44px;
+    border-radius: 14px;
+    flex: 1;
+  }
+}
+
+/* ---------- Prevent long titles/tags from breaking layout ---------- */
+.pg-title{
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.pg-tag{
+  max-width: 100%;
+  display: inline-flex;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Preview modal iframe height tweaks ---------- */
+@media (max-width: 992px){
+  .pg-preview-frame-wrap{ height: min(74vh, 720px); }
+}
+@media (max-width: 576px){
+  .pg-preview-frame-wrap{ height: 72vh; }
+}
+
+/* ---------- Touch devices: remove hover jump (no shaky UI) ---------- */
+@media (hover: none){
+  .pg-card:hover,
+  .pg-pill:hover,
+  .pg-btn:hover{
+    transform: none !important;
+    filter: none !important;
+  }
+}

@@ -980,3 +980,173 @@ body.pi-body .pi-ownerbar .pi-btn .pi-ico{
   body.pi-body .pi-ownerbar .pi-btn{ width: 165px !important; }
   body.pi-body .pi-ownerbar > a.pi-btn-ghost{ width: 120px !important; }
 }
+
+/* =========================================================
+   ✅ RESPONSIVE PACK (PI / Minimal Template)
+   Phone / Tablet / Laptop / Big Desktop
+   Paste at END
+========================================================= */
+
+/* ---------- Big desktop (>= 1400px) ---------- */
+@media (min-width: 1400px){
+  .pi-container{ max-width: 1180px; }
+  .pi-hero{ padding: 30px; }
+  .pi-iso{ height: 270px; }
+  .pi-profile img,
+  .pi-profile-fallback{ height: 210px; }
+  .pi-h1{ font-size: clamp(34px, 3.2vw, 56px); }
+}
+
+/* ---------- Laptop/Desktop (992px - 1399px) ---------- */
+@media (min-width: 992px) and (max-width: 1399.98px){
+  .pi-hero{ padding: 26px; }
+  .pi-iso{ height: 240px; }
+}
+
+/* ---------- Tablet (768px - 991px) ---------- */
+@media (min-width: 768px) and (max-width: 991.98px){
+  /* Top bar wraps */
+  .pi-top-inner{
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .pi-brand{ width: 100%; }
+  .pi-nav{
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  /* Owner bar: wrap instead of horizontal scroll */
+  .pi-ownerbar{
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+  }
+  .pi-ownerbar .pi-btn{
+    width: auto !important;
+    min-width: 180px !important;
+  }
+
+  /* Hero */
+  .pi-hero{ padding: 22px; }
+  .pi-hero-grid{ grid-template-columns: 1fr; }
+  .pi-hero-right{ flex-direction: row; flex-wrap: wrap; }
+  .pi-iso{ flex: 1; min-width: 320px; height: 220px; }
+  .pi-profile{ flex: 1; min-width: 320px; }
+
+  /* Sections */
+  .pi-section{ padding: 18px; }
+  .pi-grid2{ grid-template-columns: 1fr; }
+}
+
+/* ---------- Phone (<= 767px) ---------- */
+@media (max-width: 767.98px){
+  .pi-main{ padding: 14px 14px 56px; }
+
+  /* Top nav: stack */
+  .pi-top-inner{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 0;
+  }
+  .pi-nav{
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+  .pi-nav a{
+    padding: 9px 11px;
+    font-size: 13px;
+  }
+
+  /* Owner bar: wrap + centered */
+  .pi-owner-wrap{ padding: 12px 14px 0; }
+  .pi-ownerbar{
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+    gap: 10px !important;
+    padding-bottom: 0 !important;
+  }
+  .pi-ownerbar .pi-btn{
+    width: 100% !important;
+    max-width: 360px !important;
+    min-width: 0 !important;
+    height: 44px !important;
+    line-height: 44px !important;
+    font-size: 14px !important;
+  }
+
+  /* Hero becomes 1 column + tighter */
+  .pi-hero{ padding: 18px; margin-top: 14px; }
+  .pi-hero-grid{ grid-template-columns: 1fr; gap: 12px; }
+  .pi-h1{ font-size: clamp(26px, 7vw, 38px); }
+  .pi-lead{ font-size: 15px; }
+
+  /* Right blocks full width */
+  .pi-hero-right{ gap: 10px; }
+  .pi-iso{ height: 210px; }
+  .pi-profile img,
+  .pi-profile-fallback{ height: 170px; }
+
+  /* Metrics: stack nicer */
+  .pi-metrics{ gap: 10px; }
+  .pi-metric{ min-width: 0; }
+
+  /* Sections */
+  .pi-section{ padding: 16px; }
+  .pi-grid2{ grid-template-columns: 1fr; gap: 12px; }
+
+  /* Footer */
+  .pi-footer-top{ padding: 16px 16px 0; }
+  .pi-footer-grid{ grid-template-columns: 1fr; padding: 14px 16px 16px; }
+  .pi-footer-bottom{ padding: 12px 16px 16px; }
+
+  /* Projects: disable "hover expand" on touch (keeps stable height) */
+  .pi-project{
+    min-height: auto !important;
+    max-height: none !important;
+  }
+  .pi-project:hover{ max-height: none !important; }
+  .pi-project-desc{
+    -webkit-line-clamp: 5 !important;
+    max-height: none !important;
+    overflow: hidden !important;
+    padding-right: 0 !important;
+  }
+  .pi-project:hover .pi-project-desc{
+    -webkit-line-clamp: 5 !important;
+    max-height: none !important;
+    overflow: hidden !important;
+  }
+  .pi-project:hover .pi-project-desc::-webkit-scrollbar{ width: 0 !important; }
+}
+
+/* ---------- Small phone (<= 420px) ---------- */
+@media (max-width: 420px){
+  .pi-container{ padding: 0 14px; }
+  .pi-brand-name{ font-size: 16px; }
+  .pi-brand-sub{ font-size: 12px; }
+
+  .pi-chip{ font-size: 12.5px; padding: 7px 10px; }
+  .pi-link{ width: 100%; justify-content: center; }
+
+  .pi-ownerbar .pi-btn{
+    max-width: 100% !important;
+  }
+}
+
+/* ---------- Touch devices: remove hover-y transforms (prevents jump) ---------- */
+@media (hover: none){
+  .pi-card:hover,
+  .pi-btn:hover,
+  .pi-link:hover,
+  .pi-footer-links a:hover,
+  .pi-footer-social a:hover{
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
