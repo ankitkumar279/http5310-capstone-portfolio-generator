@@ -246,39 +246,29 @@
         <div class="dp-muted">No projects added.</div>
       @else
         <div class="dp-grid2">
-          @foreach($portfolio->projects as $p)
-            @php
-              // ✅ Reliable image URL:
-              // - if http(s) keep as-is
-              // - else force same-origin /storage/... to avoid localhost vs 127.0.0.1 issues
-              $img = null;
-              if (!empty($p->image_path)) {
-                if (preg_match('/^https?:\/\//i', $p->image_path)) {
-                  $img = $p->image_path;
-                } else {
-                  $img = '/storage/' . ltrim($p->image_path, '/');
-                }
-              }
-            @endphp
+         @foreach($portfolio->projects as $p)
+  @php
+    $img = !empty($p->image_path) ? $p->image_path : null;
+  @endphp
 
-            <div class="dp-card">
-              <div class="dp-card-title">{{ $p->title }}</div>
-              <div class="dp-muted">{{ $p->description }}</div>
+  <div class="dp-card">
+    <div class="dp-card-title">{{ $p->title }}</div>
+    <div class="dp-muted">{{ $p->description }}</div>
 
-              @if($img)
-                <img class="dp-proj-img" src="{{ $img }}" alt="{{ $p->title }} image" loading="lazy" decoding="async">
-              @endif
+    @if($img)
+      <img class="dp-proj-img" src="{{ $img }}" alt="{{ $p->title }} image" loading="lazy" decoding="async">
+    @endif
 
-              <div class="dp-chip-row">
-                @if($p->live_url)
-                  <a class="dp-chip dp-chip-primary" href="{{ $p->live_url }}" target="_blank" rel="noopener">Live</a>
-                @endif
-                @if($p->github_url)
-                  <a class="dp-chip" href="{{ $p->github_url }}" target="_blank" rel="noopener">GitHub</a>
-                @endif
-              </div>
-            </div>
-          @endforeach
+    <div class="dp-chip-row">
+      @if($p->live_url)
+        <a class="dp-chip dp-chip-primary" href="{{ $p->live_url }}" target="_blank" rel="noopener">Live</a>
+      @endif
+      @if($p->github_url)
+        <a class="dp-chip" href="{{ $p->github_url }}" target="_blank" rel="noopener">GitHub</a>
+      @endif
+    </div>
+  </div>
+@endforeach
         </div>
       @endif
     </section>

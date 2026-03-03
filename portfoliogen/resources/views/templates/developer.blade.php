@@ -323,69 +323,61 @@
       </div>
 
       <div class="row g-4">
-        @foreach($portfolio->projects as $p)
-          @php
-            $img = null;
-            if (!empty($p->image_path)) {
-              if (preg_match('/^https?:\/\//i', $p->image_path)) {
-                $img = $p->image_path;
-              } else {
-                // ✅ always same-origin
-                $img = '/storage/' . ltrim($p->image_path, '/');
-              }
-            }
-          @endphp
+    @foreach($portfolio->projects as $p)
+  @php
+    $img = !empty($p->image_path) ? $p->image_path : null;
+  @endphp
 
-          <div class="col-md-6">
-            <article class="dev-project-card">
-              <div class="dev-project-media">
-                @if($img)
-                  <div class="dev-project-thumb dev-project-thumb-img">
-                    <img src="{{ $img }}" alt="{{ $p->title }}" loading="lazy" decoding="async">
-                    <div class="dev-project-chip">Preview</div>
-                  </div>
-                @else
-                  <div class="dev-project-thumb">
-                    <div class="dev-project-chip">Preview</div>
-                    <div class="dev-project-code">
-                      <div class="line w70"></div>
-                      <div class="line w50"></div>
-                      <div class="line w85"></div>
-                      <div class="line w60"></div>
-                    </div>
-                  </div>
-                @endif
-
-                <div class="dev-project-overlay">
-                  <div class="dev-project-overlay-inner">
-                    <div class="dev-project-title">{{ $p->title }}</div>
-                    <div class="dev-project-desc">{{ $p->description }}</div>
-
-                    <div class="dev-project-actions">
-                      @if($p->live_url)
-                        <a class="dev-btn dev-btn-primary dev-btn-sm" href="{{ $p->live_url }}" target="_blank" rel="noopener">Live</a>
-                      @endif
-                      @if($p->github_url)
-                        <a class="dev-btn dev-btn-ghost dev-btn-sm" href="{{ $p->github_url }}" target="_blank" rel="noopener">GitHub</a>
-                      @endif
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="dev-project-meta">
-                <div>
-                  <div class="dev-project-meta-title">{{ $p->title }}</div>
-                  <div class="dev-project-meta-sub">{{ $p->description }}</div>
-                </div>
-                <div class="dev-project-badges">
-                  <span class="dev-badge">Dev</span>
-                  <span class="dev-badge dev-badge-soft">UI</span>
-                </div>
-              </div>
-            </article>
+  <div class="col-md-6">
+    <article class="dev-project-card">
+      <div class="dev-project-media">
+        @if($img)
+          <div class="dev-project-thumb dev-project-thumb-img">
+            <img src="{{ $img }}" alt="{{ $p->title }}" loading="lazy" decoding="async">
+            <div class="dev-project-chip">Preview</div>
           </div>
-        @endforeach
+        @else
+          <div class="dev-project-thumb">
+            <div class="dev-project-chip">Preview</div>
+            <div class="dev-project-code">
+              <div class="line w70"></div>
+              <div class="line w50"></div>
+              <div class="line w85"></div>
+              <div class="line w60"></div>
+            </div>
+          </div>
+        @endif
+
+        <div class="dev-project-overlay">
+          <div class="dev-project-overlay-inner">
+            <div class="dev-project-title">{{ $p->title }}</div>
+            <div class="dev-project-desc">{{ $p->description }}</div>
+
+            <div class="dev-project-actions">
+              @if($p->live_url)
+                <a class="dev-btn dev-btn-primary dev-btn-sm" href="{{ $p->live_url }}" target="_blank" rel="noopener">Live</a>
+              @endif
+              @if($p->github_url)
+                <a class="dev-btn dev-btn-ghost dev-btn-sm" href="{{ $p->github_url }}" target="_blank" rel="noopener">GitHub</a>
+              @endif
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dev-project-meta">
+        <div>
+          <div class="dev-project-meta-title">{{ $p->title }}</div>
+          <div class="dev-project-meta-sub">{{ $p->description }}</div>
+        </div>
+        <div class="dev-project-badges">
+          <span class="dev-badge">Dev</span>
+          <span class="dev-badge dev-badge-soft">UI</span>
+        </div>
+      </div>
+    </article>
+  </div>
+@endforeach
       </div>
     </div>
   </section>

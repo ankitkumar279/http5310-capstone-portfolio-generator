@@ -310,69 +310,46 @@
 
         <div class="biz-projects-grid">
    @foreach($portfolio->projects as $p)
- @php
-  $img = null;
 
-  if (!empty($p->image_path)) {
-    // external URL stays as-is
-    if (preg_match('/^https?:\/\//i', $p->image_path)) {
-      $img = $p->image_path;
-    } else {
-      // ✅ relative URL = same origin always
-      $img = '/storage/' . ltrim($p->image_path, '/');
-    }
-  }
-@endphp
-            <article class="biz-project-card">
-              <div class="biz-project-media">
-                @if($img)
-                  <img src="{{ $img }}" alt="{{ $p->title }}" loading="lazy" decoding="async">
-                @else
-                  <div class="biz-project-placeholder">
-                    <div class="biz-ph-line w80"></div>
-                    <div class="biz-ph-line w60"></div>
-                    <div class="biz-ph-line w90"></div>
-                  </div>
-                @endif
-              </div>
+  @php
+    $img = !empty($p->image_path) ? $p->image_path : null;
+  @endphp
 
-              <div class="biz-project-body">
-                <div class="biz-project-title">{{ $p->title }}</div>
+  <article class="biz-project-card">
+    <div class="biz-project-media">
+      @if($img)
+        <img src="{{ $img }}" alt="{{ $p->title }}" loading="lazy" decoding="async">
+      @else
+        <div class="biz-project-placeholder">
+          <div class="biz-ph-line w80"></div>
+          <div class="biz-ph-line w60"></div>
+          <div class="biz-ph-line w90"></div>
+        </div>
+      @endif
+    </div>
 
-                {{-- Short first, full on hover (CSS handles clamp/expand) --}}
-                <div class="biz-project-desc biz-clamp">
-                  {{ $p->description }}
-                </div>
+    <div class="biz-project-body">
+      <div class="biz-project-title">{{ $p->title }}</div>
 
-                {{-- Clean links (optional) --}}
-                @if($p->live_url || $p->github_url)
-                  <div class="biz-project-links">
-                    @if($p->live_url)
-                      <a class="biz-project-link" href="{{ $p->live_url }}" target="_blank" rel="noopener">
-                        🔗 Live
-                      </a>
-                    @endif
+      <div class="biz-project-desc biz-clamp">
+        {{ $p->description }}
+      </div>
 
-                    @if($p->github_url)
-                      <a class="biz-project-link" href="{{ $p->github_url }}" target="_blank" rel="noopener">
-                        💻 GitHub
-                      </a>
-                    @endif
-                  </div>
-                @endif
+      @if($p->live_url || $p->github_url)
+        <div class="biz-project-links">
+          @if($p->live_url)
+            <a class="biz-project-link" href="{{ $p->live_url }}" target="_blank">🔗 Live</a>
+          @endif
 
-                {{-- Buttons (keep) --}}
-                <div class="biz-project-actions">
-                  @if($p->live_url)
-                    <a class="biz-pill biz-pill-primary" href="{{ $p->live_url }}" target="_blank" rel="noopener">Live</a>
-                  @endif
-                  @if($p->github_url)
-                    <a class="biz-pill biz-pill-ghost" href="{{ $p->github_url }}" target="_blank" rel="noopener">GitHub</a>
-                  @endif
-                </div>
-              </div>
-            </article>
-          @endforeach
+          @if($p->github_url)
+            <a class="biz-project-link" href="{{ $p->github_url }}" target="_blank">💻 GitHub</a>
+          @endif
+        </div>
+      @endif
+    </div>
+  </article>
+
+@endforeach
         </div>
 
       </div>

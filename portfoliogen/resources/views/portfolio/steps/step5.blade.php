@@ -154,10 +154,10 @@
                     <div class="pg-edu-title">{{ $p->title }}</div>
 
                     
-                   @if($p->image_path)
+@if($p->image_path)
   <div style="margin-top:10px;">
     <img
-     src="{{ '/storage/' . ltrim($p->image_path, '/') }}"
+      src="{{ $p->image_path }}"
       alt="project"
       style="width:100%; max-height:200px; object-fit:cover; border-radius:14px; border:1px solid rgba(255,255,255,.12);"
     >

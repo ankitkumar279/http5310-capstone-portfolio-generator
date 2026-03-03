@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+
 use App\Models\Education;
 use App\Models\Experience;
 use App\Models\Skill;
@@ -59,10 +60,15 @@ class PortfolioWizardController extends Controller
         ]);
     }
 
+    // ----------------------------
+    // DELETE ITEMS
+    // ----------------------------
+
     public function deleteEducation(string $username, Portfolio $portfolio, Education $education)
     {
         $this->authorizeOwner($portfolio);
         if ((string) $education->portfolio_id !== (string) $portfolio->id) abort(403);
+
         $education->delete();
         return back()->with('success', 'Education deleted.');
     }
@@ -71,6 +77,7 @@ class PortfolioWizardController extends Controller
     {
         $this->authorizeOwner($portfolio);
         if ((string) $experience->portfolio_id !== (string) $portfolio->id) abort(403);
+
         $experience->delete();
         return back()->with('success', 'Experience deleted.');
     }
@@ -79,6 +86,7 @@ class PortfolioWizardController extends Controller
     {
         $this->authorizeOwner($portfolio);
         if ((string) $skill->portfolio_id !== (string) $portfolio->id) abort(403);
+
         $skill->delete();
         return back()->with('success', 'Skill deleted.');
     }
@@ -88,13 +96,17 @@ class PortfolioWizardController extends Controller
         $this->authorizeOwner($portfolio);
         if ((string) $project->portfolio_id !== (string) $portfolio->id) abort(403);
 
-        if ($project->image_path) {
-            Storage::disk('public')->delete($project->image_path);
-        }
-
+        // NOTE:
+        // Projects image_path can now be Cloudinary URLs, so do NOT delete from Storage disk here.
+        // (If you later want to delete from Cloudinary by public_id, we can add that.)
         $project->delete();
+
         return back()->with('success', 'Project deleted.');
     }
+
+    // ----------------------------
+    // UPDATE ITEMS
+    // ----------------------------
 
     public function updateEducation(Request $request, string $username, Portfolio $portfolio, Education $education)
     {
@@ -156,23 +168,26 @@ class PortfolioWizardController extends Controller
             'image'       => ['nullable', 'image', 'max:4096'],
         ]);
 
-        if ($request->hasFile('image')) {
-            if ($project->image_path) {
-                Storage::disk('public')->delete($project->image_path);
-            }
-            $data['image_path'] = $request->file('image')->store('projects', 'public');
+        // ✅ Cloudinary upload (helper)
+        $imageUrl = $this->uploadProjectImageToCloudinary($request, $username, $portfolio);
+        if ($imageUrl) {
+            $data['image_path'] = $imageUrl;
         }
 
         $project->update($data);
         return back()->with('success', 'Project updated.');
     }
 
+    // ----------------------------
+    // PORTFOLIO ACTIONS
+    // ----------------------------
+
     public function saveDraft(string $username, Portfolio $portfolio)
     {
         $this->authorizeOwner($portfolio);
 
         $portfolio->update([
-            'status' => 'draft',
+            'status'       => 'draft',
             'published_at' => null,
         ]);
 
@@ -196,6 +211,10 @@ class PortfolioWizardController extends Controller
         $portfolio->published_at = now();
         $portfolio->save();
 
+        // If your templates show session('public_url'), you can also set it here if you want:
+        // $publicUrl = route('portfolio.public.view', ['username' => $this->u(), 'public_id' => $portfolio->public_id]);
+        // return redirect()->route('dashboard.published', ['username' => $this->u()])->with('success', 'Portfolio published!')->with('public_url', $publicUrl);
+
         return redirect()->route('dashboard.published', [
             'username' => $this->u(),
         ])->with('success', 'Portfolio published! Your public link is now live.');
@@ -206,7 +225,7 @@ class PortfolioWizardController extends Controller
         $this->authorizeOwner($portfolio);
 
         $portfolio->update([
-            'status' => 'draft',
+            'status'       => 'draft',
             'published_at' => null,
         ]);
 
@@ -221,16 +240,12 @@ class PortfolioWizardController extends Controller
 
         DB::transaction(function () use ($portfolio) {
 
+            // ✅ photo_path is local in your app (public disk)
             if ($portfolio->photo_path) {
                 Storage::disk('public')->delete($portfolio->photo_path);
             }
 
-            foreach ($portfolio->projects as $proj) {
-                if ($proj->image_path) {
-                    Storage::disk('public')->delete($proj->image_path);
-                }
-            }
-
+            // ✅ projects images might be Cloudinary URLs, so no local delete
             $portfolio->educations()->delete();
             $portfolio->experiences()->delete();
             $portfolio->skills()->delete();
@@ -294,7 +309,7 @@ class PortfolioWizardController extends Controller
                     'description' => $p->description,
                     'live_url'    => $p->live_url,
                     'github_url'  => $p->github_url,
-                    'image_path'  => null,
+                    'image_path'  => null, // ✅ keep null for copy
                 ]);
             }
 
@@ -335,6 +350,10 @@ class PortfolioWizardController extends Controller
         ])->with('success', 'Template updated.');
     }
 
+    // ----------------------------
+    // WIZARD SAVE STEP
+    // ----------------------------
+
     public function saveStep(Request $request, string $username, Portfolio $portfolio, int $step)
     {
         $this->authorizeOwner($portfolio);
@@ -349,11 +368,12 @@ class PortfolioWizardController extends Controller
 
         $isAutosave = $request->boolean('autosave') || $request->query('autosave') == 1;
 
+        // STEP 1
         if ($step === 1) {
             $data = $request->validate([
                 'full_name'     => 'required|string|max:120',
                 'job_title'     => 'required|string|max:120',
-                'short_bio'     => 'required|string|max:800',
+                'short_bio'     => 'required|string|max:1200',
                 'location'      => 'required|string|max:120',
                 'github_url'    => 'nullable|url|max:255',
                 'linkedin_url'  => 'nullable|url|max:255',
@@ -361,6 +381,7 @@ class PortfolioWizardController extends Controller
                 'photo'         => 'nullable|image|max:2048',
             ]);
 
+            // NOTE: your profile photo still uses local storage.
             if ($request->hasFile('photo')) {
                 $path = $request->file('photo')->store('photos', 'public');
                 $data['photo_path'] = $path;
@@ -379,6 +400,7 @@ class PortfolioWizardController extends Controller
             ]);
         }
 
+        // STEP 2
         if ($step === 2) {
             $action = $request->input('action', 'add');
 
@@ -414,6 +436,7 @@ class PortfolioWizardController extends Controller
             ]);
         }
 
+        // STEP 3
         if ($step === 3) {
             $action = $request->input('action', 'next');
 
@@ -421,7 +444,7 @@ class PortfolioWizardController extends Controller
                 $request->validate([
                     'company_name' => 'required|string|max:180',
                     'role'         => 'required|string|max:180',
-                    'description'  => 'nullable|string|max:1000',
+                    'description'  => 'nullable|string|max:2000',
                     'start_date'   => 'nullable|date',
                     'end_date'     => 'nullable|date',
                 ]);
@@ -446,6 +469,7 @@ class PortfolioWizardController extends Controller
             ]);
         }
 
+        // STEP 4
         if ($step === 4) {
             $action = $request->input('action', 'next');
 
@@ -477,6 +501,7 @@ class PortfolioWizardController extends Controller
             ]);
         }
 
+        // STEP 5 (PROJECTS) ✅ Cloudinary upload here too
         if ($step === 5) {
             $action = $request->input('action', 'next');
 
@@ -484,15 +509,17 @@ class PortfolioWizardController extends Controller
                 $request->validate([
                     'title'       => 'required|string|max:180',
                     'description' => 'required|string|max:1200',
-                    'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+                    'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
                     'live_url'    => 'nullable|url|max:255',
                     'github_url'  => 'nullable|url|max:255',
                 ]);
 
                 $payload = $request->only(['title', 'description', 'live_url', 'github_url']);
 
-                if ($request->hasFile('image')) {
-                    $payload['image_path'] = $request->file('image')->store('projects', 'public');
+                // ✅ Cloudinary upload (helper)
+                $imageUrl = $this->uploadProjectImageToCloudinary($request, $username, $portfolio);
+                if ($imageUrl) {
+                    $payload['image_path'] = $imageUrl;
                 }
 
                 $portfolio->projects()->create($payload);
@@ -513,6 +540,7 @@ class PortfolioWizardController extends Controller
             ]);
         }
 
+        // STEP 6
         if ($step === 6) {
             $portfolio->update(['status' => 'draft']);
 
@@ -528,6 +556,32 @@ class PortfolioWizardController extends Controller
 
         return back();
     }
+
+
+    private function uploadProjectImageToCloudinary(Request $request, string $username, Portfolio $portfolio): ?string
+{
+    if (!$request->hasFile('image')) return null;
+
+    $file = $request->file('image');
+
+    try {
+        $result = cloudinary()->uploadApi()->upload(
+            $file->getRealPath(),
+            [
+                'folder'        => "projects/{$username}/{$portfolio->id}",
+                'resource_type' => 'image',
+            ]
+        );
+
+        // Cloudinary SDK returns an array-like response in v3
+        return $result['secure_url'] ?? null;
+
+    } catch (\Throwable $e) {
+        // Optional: log it and continue without image
+        \Log::error('Cloudinary upload failed: '.$e->getMessage());
+        return null;
+    }
+}
 
     private function advanceStep(Portfolio $portfolio, int $nextStep)
     {

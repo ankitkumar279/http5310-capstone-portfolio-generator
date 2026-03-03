@@ -342,49 +342,39 @@
         <div class="pi-empty">No projects added yet.</div>
       @else
         <div class="pi-grid2 pi-projects-grid">
-          @foreach($portfolio->projects as $p)
-            @php
-              // ✅ Reliable image URL:
-              // - if http(s) keep as-is
-              // - else force same-origin /storage/...
-              $img = null;
-              if (!empty($p->image_path)) {
-                if (preg_match('/^https?:\/\//i', $p->image_path)) {
-                  $img = $p->image_path;
-                } else {
-                  $img = '/storage/' . ltrim($p->image_path, '/');
-                }
-              }
-            @endphp
+        @foreach($portfolio->projects as $p)
+  @php
+    $img = !empty($p->image_path) ? $p->image_path : null;
+  @endphp
 
-            <article class="pi-card pi-project">
-              <div class="pi-project-top">
-                <div class="pi-project-title">{{ $p->title }}</div>
-                @if($p->tech_stack)
-                  <div class="pi-project-tech">{{ $p->tech_stack }}</div>
-                @endif
-              </div>
+  <article class="pi-card pi-project">
+    <div class="pi-project-top">
+      <div class="pi-project-title">{{ $p->title }}</div>
+      @if($p->tech_stack)
+        <div class="pi-project-tech">{{ $p->tech_stack }}</div>
+      @endif
+    </div>
 
-              <div class="pi-project-body">
-                <p class="pi-project-desc">{{ $p->description }}</p>
+    <div class="pi-project-body">
+      <p class="pi-project-desc">{{ $p->description }}</p>
 
-                @if($img)
-                  <div class="pi-project-media">
-                    <img class="pi-img" src="{{ $img }}" alt="{{ $p->title }} image" loading="lazy" decoding="async">
-                  </div>
-                @endif
-              </div>
+      @if($img)
+        <div class="pi-project-media">
+          <img class="pi-img" src="{{ $img }}" alt="{{ $p->title }} image" loading="lazy" decoding="async">
+        </div>
+      @endif
+    </div>
 
-              <div class="pi-links pi-project-links">
-                @if($p->live_url)
-                  <a class="pi-link pi-link-primary" href="{{ $p->live_url }}" target="_blank" rel="noopener">Live</a>
-                @endif
-                @if($p->github_url)
-                  <a class="pi-link" href="{{ $p->github_url }}" target="_blank" rel="noopener">GitHub</a>
-                @endif
-              </div>
-            </article>
-          @endforeach
+    <div class="pi-links pi-project-links">
+      @if($p->live_url)
+        <a class="pi-link pi-link-primary" href="{{ $p->live_url }}" target="_blank" rel="noopener">Live</a>
+      @endif
+      @if($p->github_url)
+        <a class="pi-link" href="{{ $p->github_url }}" target="_blank" rel="noopener">GitHub</a>
+      @endif
+    </div>
+  </article>
+@endforeach
         </div>
       @endif
     </section>
